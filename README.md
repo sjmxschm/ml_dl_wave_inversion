@@ -4,8 +4,6 @@
 
 **Email:** [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
 
-insert images FEA_model_non-uniform_coating_inkscape_Github
-
 ![alt text](resources/DL_inversion_image.png "Title")
 
 ## Introduction
