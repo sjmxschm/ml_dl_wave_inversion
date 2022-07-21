@@ -43,13 +43,3 @@ inversion model. The folder contains several notebooks which are explained in th
 - `helper_scripts` include smaller scripts for minor tasks used during develpment
 - `unit_tests` include Python unit tests which were run during development and can still be
 used for testing any adjustments made. Most unit tests are called form the deep learning code.
-
-TO-DO:
-- remove all text which mentions the computer vision class in the deep learning files
-- remove `extract disp history`
-- check ``helper scripts`` for credential
-- remove ``Jays_models``
-- remove ``publicaiton_export``
-- remove ``stft_nate``
-- remove //create_model: - demonstration_model, - old, -sim_helping_Nate, -steelTape
-- remove all not necessary files (.out, .pbs, .pgf) from //create_model
