@@ -41,3 +41,8 @@ inversion model. The folder contains several notebooks which are explained in th
 - `helper_scripts` include smaller scripts for minor tasks used during develpment
 - `unit_tests` include Python unit tests which were run during development and can still be
 used for testing any adjustments made. Most unit tests are called form the deep learning code.
+
+As by definition, the machine and deep learning part is based on simulated data. I have not found a
+proper way to upload this data yet (features, train and test images, pretrained model parameters). 
+If you are interested, feel free to send me an email and I am happy to provide you with the respective
+data: [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
