@@ -1,0 +1,22 @@
+{
+      "f_max": 628318530.7179586, 
+      "b_height": 0.001, 
+      "t_sampling": 2e-08, 
+      "t_max": 2e-08, 
+      "t_period": 9.2e-05, 
+      "sim_dur": 55993.56460905075, 
+      "num_cores": null, 
+      "b_elem_size": 5.821107385130693e-06, 
+      "n_mesh": 1, 
+      "c_height": 0.000525, 
+      "d_start": 0.01, 
+      "ex_amp": 2e-06, 
+      "n_sampling": "not used", 
+      "cR_chrome": 3657.509639376775, 
+      "p_width": 0.08, 
+      "d_end": 0.005, 
+      "msmt_len": 0.065, 
+      "job_name": "10-04_19-04-38_max_analysis_job", 
+      "c_elem_size": 5.821107385130693e-06, 
+      "t_end": 4e-08
+}
