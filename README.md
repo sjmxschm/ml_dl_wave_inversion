@@ -26,7 +26,7 @@ The project is subdivided into 3 separate main parts. Each part is contained in 
 separate folder with respective naming which will be walked through in the following. There is a visualization
 of the repo structure below too.
 
-- `analysis_sklearn` contains the machine learning inversion procedure based on Scikit-Learn
+- `analysis_sklearn` contains the machine learning inversion procedure based on scikit-learn
 - `analysis_disp_curves` incorporates the conversion of dispersion curves extracted from a 
 dispersion curve calculator (like [DLR dispersion calculator](https://www.dlr.de/zlp/en/desktopdefault.aspx/tabid-14332/24874_read-61142/))
 into the right format and domain, e.g. from a phase speed - frequency representation into a
