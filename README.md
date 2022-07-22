@@ -153,3 +153,14 @@ As by definition, the machine and deep learning part is based on simulated data.
 data used for this research (train and test images, pretrained model parameters) to providers like SourceForge, ... yet. 
 If you are interested, feel free to send me an email and I am happy to provide you with the respective
 data: [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
+
+## Citation
+
+If you find this useful, please cite our paper.
+
+@article{ml_wave_inversion,
+  title={Machine and Deep Learning for Coating Thickness Prediction Using Lamb Wave},
+  author= {Maximilian Schmitz and Jin-Yeon Kim and Laurence J. Jacobs},
+  journal={Available at SSRN: https://ssrn.com/abstract=4124083},
+  year={2022}
+}
