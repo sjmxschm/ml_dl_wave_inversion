@@ -20,10 +20,11 @@ With this repository, you can
 - invert to the uniformness of the coating using deep learning
 
 
-## Repository Walk through
+## Repo Walk through
 
 The project is subdivided into 3 separate main parts. Each part is contained in a
-separate folder with respective naming which will be walked through in the following.
+separate folder with respective naming which will be walked through in the following. There is a visualization
+of the repo structure below too.
 
 - `analysis_sklearn` contains the machine learning inversion procedure based on Scikit-Learn
 - `analysis_disp_curves` incorporates the conversion of dispersion curves extracted from a 
@@ -41,6 +42,112 @@ inversion model. The folder contains several notebooks which are explained in th
 - `helper_scripts` include smaller scripts for minor tasks used during develpment
 - `unit_tests` include Python unit tests which were run during development and can still be
 used for testing any adjustments made. Most unit tests are called form the deep learning code.
+
+## Repo Structure
+
+```
+ml_dl_wave_inversion
+│   README.md  
+│
+└───analysis_sklearn
+│   │   analysis_sklearn.ipynb
+│   │   dispersion_feature_loader.py
+│   └───data
+|       |   ...
+│   └───figures
+│
+└───analytical_disp_curves
+│   |   analytical_curves.py
+│   └───Cr_dispersion_curves
+|      |   ...
+│   └───Zy4Cr_dispersion_curves
+|      |   ...
+│   └───Zy4_dispersion_curves_DC
+|      |   ...
+│
+└───create_model
+│   |   README.md
+|   |   __init__.py
+|   |   at_cluster_conda.pbs
+|   |   at_cluster_conda_postpro.pbs
+|   |   auto_feat_ext.pbs
+|   |   auto_feature_extraction.py
+|   |   auto_image_extraction.py
+|   |   auto_img_ext.pbs
+|   |   create_model_script_v15.py
+|   |   create_model_script_v15_no_gap.py
+|   |   delete_unnecessary_files_from_cluster.py
+|   |   extract_disp_history_max_v5.py
+|   |   postprocess_2dfft_max_v15.py
+|   |   qdel_automation.py
+|   |   run_automated_simulations_cluster.py
+|   |   run_automated_simulations_cluster_postp.py
+|   |   run_parallel_on_cluster.pbs
+|   |   run_parallel_simulations.py
+|   |   run_simulation.py
+|   |   utils.py
+|   |   visualize_dataset.py
+|   |   wave_env_cluster.yml
+│   └───figures_param_space
+|
+└───dl_code
+│   |   README.md
+|   |   __init__.py
+|   |   confusion_matrix.py
+|   |   data_transforms.py
+|   |   dl_utils.py
+|   |   image_loader.py
+|   |   maxWaveNet_local.ipynb
+|   |   my_resnet.py
+|   |   my_resnet_old_december.py
+|   |   optimizer.py
+|   |   runner.py
+|   |   simple_net.py
+|   |   simple_net_big.py
+|   |   simple_net_final.py
+|   |   stats_helper.py
+|   |   test_cuda_on_cluster.ipynb
+|   |   testing.py
+|   |   train_network.pbs
+|   |   train_network_cluster.py
+|   |   validate_network.ipynb
+|   |   visualize_training_history.py
+|   |   wave_cnn_env_linux.yml
+|   |   wave_cnn_env_linux_2.yml
+│   └───data
+|      └───test
+|           |   ...
+|      └───train
+|           |   ...
+│   └───figures
+│   └───model_checkpoints
+│   └───trained_models
+│
+└───helper_scripts
+│   |   automate_calling_from_cmd.py
+|   |   build_slack_notifications.py
+│   |   calculate_group_velocity.py
+|   |   calculate_material_constants.py
+│   |   delete_only_blacklist_files.py
+|   |   ft_triangular_func.png
+│   |   triangle_fourier_transform.py
+|   
+└───resources
+| 
+└───unit_tests
+│   |   __init__.py
+|   |   model_test_utils.py
+│   |   test_data_transforms.py
+│   |   test_dl_utils.py
+|   |   test_image_loader.py
+│   |   test_my_resnet.py
+│   |   test_simple_net.py
+|   |   test_simple_net_final.py
+│   |   test_stats_helper.py
+|   |   utils.py
+```
+
+## Train/Test Data & Pretrained Weights
 
 As by definition, the machine and deep learning part is based on simulated data. I have not found a
 proper way to upload this data yet (train and test images, pretrained model parameters). 
