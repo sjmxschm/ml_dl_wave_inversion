@@ -149,7 +149,7 @@ ml_dl_wave_inversion
 
 ## Train/Test Data & Pretrained Weights
 
-As by definition, the machine and deep learning part is based on simulated data. I have not found a
-proper way to upload this data yet (train and test images, pretrained model parameters). 
+As by definition, the machine and deep learning part is based on simulated data. I have not uploaded the 
+data used for this research (train and test images, pretrained model parameters) to providers like SourceForge, ... yet. 
 If you are interested, feel free to send me an email and I am happy to provide you with the respective
 data: [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
