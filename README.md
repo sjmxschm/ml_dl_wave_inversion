@@ -157,10 +157,11 @@ data: [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
 ## Citation
 
 If you find this useful, please cite our paper.
-
+ ```
 @article{ml_wave_inversion,
   title={Machine and Deep Learning for Coating Thickness Prediction Using Lamb Wave},
   author= {Maximilian Schmitz and Jin-Yeon Kim and Laurence J. Jacobs},
   journal={Available at SSRN: https://ssrn.com/abstract=4124083},
   year={2022}
 }
+```
