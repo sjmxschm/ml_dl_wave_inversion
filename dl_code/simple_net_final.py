@@ -7,9 +7,6 @@ class SimpleNetFinal(nn.Module):
         """
         Constructor for SimpleNetFinal class to define the layers and loss
         function.
-
-        Note: Use 'mean' reduction in the loss_criterion. Read Pytorch's
-        documention to understand what this means.
         """
         super(SimpleNetFinal, self).__init__()
 
