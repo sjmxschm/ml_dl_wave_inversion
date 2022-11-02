@@ -149,20 +149,6 @@ def apply_2dfft(input_data, sim_info):
     fft_data = np.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
     print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
 
-    # # jax is not working with windows - what a shame!!!
-    # try:
-    #     import jax.numpy as jnp
-    # except ModuleNotFoundError:
-    #     print('jax package not installed in environment')
-    # # import jax.numpy as jnp
-    # start_time = time.time()
-    # try:
-    #     fft_data = jnp.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
-    # except NameError:
-    #     print('2dfft was used instead of jax')
-    #     fft_data = np.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
-    # print("--- jax 2dfft time: %s seconds ---" % (time.time() - start_time))
-
     fg, kg = np.meshgrid(k, f)
 
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
