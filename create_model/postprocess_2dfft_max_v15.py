@@ -4,6 +4,8 @@ import numpy as np
 
 import time
 
+from typing import Tuple
+
 from os import listdir
 from os.path import isfile, join
 
@@ -103,6 +105,7 @@ v15:
 
 def apply_2dfft(input_data, sim_info):
     """
+    TODO: move this function to separate file or to utils
     Apply 2D-FFT transform to the input data which has the shape as shown above.
 
     args:
@@ -156,6 +159,54 @@ def apply_2dfft(input_data, sim_info):
     # absFftArray = np.absolute(fftArray)**2                    # for power spectrum
 
     return fg, kg, abs_fft_data
+
+
+def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, int, int]:
+    """
+    TODO: move this function to separate file or to utils
+    Inverts the 2D-FFT data, such that the representation in the frequency-wavenumber is
+    converted into the time-displacement domain
+
+    :arg:
+        - fg - ndarray - frequency grid where unique frequencies are along axis 0
+        - kg - ndarray - wavenumber grid where unique wavenumbers are along axis 1
+        - fft_abs - ndarray - 2D-FFT transformed data from simulation data
+        - sim_info - dict - simulation information file with meta-information
+
+    :return:
+        - time_x_displacement - ndarray - array containing the time x displacement values reconstructed from 2D-FFt
+        - dt - sampling time
+        - dx
+        - Nt
+        - Nx
+    """
+
+    # TODO: apply fftshift first to swap first and third, and second and fourth quadrants back to original shape
+    fft_original = np.fft.fftshift(fft_abs)
+
+    # TODO: obtain df from ny_f and obtain dx from ny_k, those are in f and k, those are in fg, kg
+    f = fg[0, :]  # first row contains unique frequencies
+    k = kg[:, 0]  # first columns contains unique wavenumbers
+
+    ny_f, ny_k = f[-1], k[-1]
+
+    dt = 1.0 / (2 * ny_f)
+    dx = 1.0 / (2 * ny_k)
+
+    Nt = f.shape[0]
+    Nx = k.shape[0]
+
+    tMax = Nt * dt
+    xMax = Nx * dx
+
+    assert sim_info['msmt_len'] == xMax, "There is a missmatch in the measurement length"
+    assert sim_info['sampling_time'] == dt, "Sampling times do not match"
+
+    # TODO: apply ifft2 to get back the time displacement data (invert 2D-FFT)
+    time_x_displacement = np.fft.ifft2(fft_original)
+
+    # TODO: create new apply_2dfft function which uses this data as an input, otherwise are xMax and tMax be available?
+    return time_x_displacement, dt, dx, Nt, Nx
 
 
 def postprocessing_2dfft(
@@ -228,7 +279,7 @@ def postprocessing_2dfft(
     plt_res = plt_res
     plt_type = plt_type
 
-    # check if there is 2D-FFT processed data already
+    # check if there is 2D-FFT processed data already existing
     fn, is_transformed = get_newest_file_name(
         data_path,
         job_name='max_analysis_job',
