@@ -175,10 +175,10 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
 
     :return:
         - time_x_displacement - ndarray - array containing the time x displacement values reconstructed from 2D-FFt
-        - dt - sampling time
-        - dx
-        - Nt
-        - Nx
+        - dt - float - sampling time of simulation
+        - dx - float - spatial sampling location difference
+        - Nt - int - number of samples in time
+        - Nx - int - number of sampling locations in space
     """
 
     # TODO: apply fftshift first to swap first and third, and second and fourth quadrants back to original shape
