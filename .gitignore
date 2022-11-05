@@ -1,3 +1,6 @@
+# Local & data heavy directories
+create_model/2dfft_data_selected/
+
 ## Python specific .gitignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
