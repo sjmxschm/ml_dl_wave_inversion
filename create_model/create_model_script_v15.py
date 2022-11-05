@@ -77,7 +77,7 @@ v15:
 
 
 def run_abaqus_model(
-        coating_height=600E-6,
+        coating_height=300E-6,
         plate_width=0.08,
         base_plate_height=0.003,
         coating_density=7190.0,
