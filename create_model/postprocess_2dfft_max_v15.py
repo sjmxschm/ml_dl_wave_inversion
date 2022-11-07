@@ -152,7 +152,7 @@ def apply_2dfft(input_data, sim_info):
     fft_data = np.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
     print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
 
-    fg, kg = np.meshgrid(k, f)
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be conistant with older data
 
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
     # abs_fft_data = 20 * np.log10(np.absolute(fft_data))       # for amplitude spectrum in dB
@@ -185,22 +185,42 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
     fft_original = np.fft.fftshift(fft_abs)
 
     # TODO: obtain df from ny_f and obtain dx from ny_k, those are in f and k, those are in fg, kg
-    f = fg[0, :]  # first row contains unique frequencies
-    k = kg[:, 0]  # first columns contains unique wavenumbers
+    ## WATCH OUT I MIXED K AND F IN THE MESHGRID FUNCTION IN THE 2D-FFT FUNCTION! MIX IT BACK HERE
+    k = fg[0, :]  # first row contains unique frequencies
+    f = kg[:, 0]  # first columns contains unique wavenumbers
 
     ny_f, ny_k = f[-1], k[-1]
 
     dt = 1.0 / (2 * ny_f)
     dx = 1.0 / (2 * ny_k)
 
-    Nt = f.shape[0]
-    Nx = k.shape[0]
+    Nt = f.shape[0] * 2  # quadrant 2,3,4 were cut, so Nt is actually twice as big
+    Nx = k.shape[0] * 2  # quadrant 2,3,4 were cut, so Nx is actually twice as big
 
     tMax = Nt * dt
     xMax = Nx * dx
 
-    assert sim_info['msmt_len'] == xMax, "There is a missmatch in the measurement length"
-    assert sim_info['sampling_time'] == dt, "Sampling times do not match"
+    if True:
+        print(f"Nt = {Nt}, Nx = {Nx}")
+        print(f"f[-3::] = {f[-3::]}")
+        print(f"k[-3::] = {k[-3::]}")
+        print(f"f[0:3] = {f[0:3]}")
+        print(f"k[0:3] = {k[0:3]}")
+        print(f"ny_f = {ny_f}")
+        print(f"ny_k = {ny_k}")
+        print(f"dt = {dt}")
+        print(f"dx = {dx}")
+        print(f"tMax = {tMax}")
+        print(f"xMax = {xMax}")
+
+    assert sim_info['msmt_len'] == round(xMax, 2), \
+        f"There is a missmatch in the measurement length!" \
+        f"\n> sim_info['msmt_len'] = {sim_info['msmt_len']} " \
+        f"not equal to xMax = {xMax}, with dx = {dx}!"
+    assert sim_info['t_sampling'] == round(dt, 8), \
+        f"Sampling times do not match" \
+        f"\n> sim_info['sampling_time'] = {sim_info['sampling_time']} " \
+        f"not equal to xMax = {dt}!"
 
     # TODO: apply ifft2 to get back the time displacement data (invert 2D-FFT)
     time_x_displacement = np.fft.ifft2(fft_original)
