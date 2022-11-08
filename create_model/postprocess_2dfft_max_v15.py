@@ -152,7 +152,7 @@ def apply_2dfft(input_data, sim_info):
     fft_data = np.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
     print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
 
-    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be conistant with older data
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistant with older data
 
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
     # abs_fft_data = 20 * np.log10(np.absolute(fft_data))       # for amplitude spectrum in dB
@@ -174,7 +174,7 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
         - sim_info - dict - simulation information file with meta-information
 
     :return:
-        - time_x_displacement - ndarray - array containing the time x displacement values reconstructed from 2D-FFt
+        - displacement_x_time - ndarray - array containing the time x displacement values reconstructed from 2D-FFt
         - dt - float - sampling time of simulation
         - dx - float - spatial sampling location difference
         - Nt - int - number of samples in time
@@ -221,16 +221,16 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
         f"not equal to xMax = {dt}!"
 
     # TODO: apply ifft2 to get back the time displacement data (invert 2D-FFT)
-    time_x_displacement = np.fft.ifft2(fft_original)
+    displacement_x_time = np.fft.ifft2(fft_original)
 
     # TODO: create new apply_2dfft function which uses this data as an input, otherwise are xMax and tMax be available?
-    return time_x_displacement, dt, dx, Nt, Nx
+    return displacement_x_time, dt, dx, Nt, Nx
 
 
-def reapply_2dfft(time_x_displacement, dt, dx, Nt, Nx, sim_info):
+def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx):
     """
     TODO: move this function to separate file or to utils
-    Apply 2D-FFT transform to the noisy displacement data in the time-displacement domain which was
+    Re-apply 2D-FFT transform to the noisy displacement data in the time-displacement domain which was
     originally transformed back from the frequency-wavenumber space
 
     :arg:
@@ -240,11 +240,32 @@ def reapply_2dfft(time_x_displacement, dt, dx, Nt, Nx, sim_info):
         - Nt - int - number of samples in time
         - Nx - int - number of sampling locations in space
 
-    returns:
+    :returns:
         fg: mesh array with frequencies
         kg: mesh array with wave numbers
         abs_fft_data: absolute values after 2D-FFT transform
     """
+    fg = None
+    kg = None
+    abs_fft_data = None
+
+    # Get k, f intervals
+    ny_f = 1.0 / (2 * dt)
+    ny_k = 1.0 / (2 * dx)
+
+    k = np.linspace(-ny_k, ny_k, num=Nx)
+    f = np.linspace(-ny_f, ny_f, num=Nt)
+
+    # apply 2D FFT
+    start_time = time.time()
+    fft_data = np.fft.fftshift(np.fft.fft2(displacement_x_time))  # *dx*dt
+    print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
+
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistant with older data
+
+    abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
+
+    return fg, kg, abs_fft_data
 
 
 def postprocessing_2dfft(
