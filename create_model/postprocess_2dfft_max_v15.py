@@ -227,7 +227,7 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
     return displacement_x_time, dt, dx, Nt, Nx
 
 
-def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx):
+def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     TODO: move this function to separate file or to utils
     Re-apply 2D-FFT transform to the noisy displacement data in the time-displacement domain which was
@@ -266,6 +266,40 @@ def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx):
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
 
     return fg, kg, abs_fft_data
+
+
+def add_noise(d_x_t, snr: int = 80) -> np.ndarray:
+    """
+    Adds random noise to the displacement x time data to simulate real noisy measurements
+    and accounts for imperfectness in simulation model
+
+    :param
+        - d_x_t: np.array - displacement x time array with respective sampling nodes on y-axis and time on x-axis
+        - snr: int - signal-to-noise ratio of signal and newly created noise
+    :return:
+        - d_x_t_noisy: np.array - same dimensions as d_x_t but with added random noise
+    """
+    noise = np.zeros(d_x_t.shape)
+    mean = np.mean(d_x_t)
+    max_value = np.amax(d_x_t)
+    # sd = mean/snr
+    sd = max_value.real/snr
+
+    noise = np.random.normal(noise, sd, d_x_t.shape)
+
+    d_x_t_noisy = d_x_t + noise
+
+    print_values = False
+    if print_values:
+        print(d_x_t.shape)
+        print(F"mean = {mean} -> {mean.real}")
+        print(F"mean = {max_value} -> {max_value.real}")
+        print(f"sd = {sd}")
+        print(f"d_x_t_noisy.shape = {d_x_t_noisy.shape}")
+        print(f"noise = \n{noise}")
+        print(f"d_x_t_noisy =\n{d_x_t_noisy}")
+
+    return d_x_t_noisy
 
 
 def postprocessing_2dfft(
