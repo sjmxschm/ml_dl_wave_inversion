@@ -180,11 +180,8 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
         - Nt - int - number of samples in time
         - Nx - int - number of sampling locations in space
     """
-
-    # TODO: apply fftshift first to swap first and third, and second and fourth quadrants back to original shape
     fft_original = np.fft.fftshift(fft_abs)
 
-    # TODO: obtain df from ny_f and obtain dx from ny_k, those are in f and k, those are in fg, kg
     ## WATCH OUT I MIXED K AND F IN THE MESHGRID FUNCTION IN THE 2D-FFT FUNCTION! MIX IT BACK HERE
     k = fg[0, :]  # first row contains unique frequencies
     f = kg[:, 0]  # first columns contains unique wavenumbers
@@ -200,7 +197,8 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
     tMax = Nt * dt
     xMax = Nx * dx
 
-    if True:
+    display_2dfft_values = False
+    if display_2dfft_values:
         print(f"Nt = {Nt}, Nx = {Nx}")
         print(f"f[-3::] = {f[-3::]}")
         print(f"k[-3::] = {k[-3::]}")
@@ -227,6 +225,26 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
 
     # TODO: create new apply_2dfft function which uses this data as an input, otherwise are xMax and tMax be available?
     return time_x_displacement, dt, dx, Nt, Nx
+
+
+def reapply_2dfft(time_x_displacement, dt, dx, Nt, Nx, sim_info):
+    """
+    TODO: move this function to separate file or to utils
+    Apply 2D-FFT transform to the noisy displacement data in the time-displacement domain which was
+    originally transformed back from the frequency-wavenumber space
+
+    :arg:
+        - time_x_displacement - ndarray - array containing the time x displacement values reconstructed from 2D-FFT
+        - dt - float - sampling time of simulation
+        - dx - float - spatial sampling location difference
+        - Nt - int - number of samples in time
+        - Nx - int - number of sampling locations in space
+
+    returns:
+        fg: mesh array with frequencies
+        kg: mesh array with wave numbers
+        abs_fft_data: absolute values after 2D-FFT transform
+    """
 
 
 def postprocessing_2dfft(
