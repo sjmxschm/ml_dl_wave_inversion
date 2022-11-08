@@ -283,7 +283,7 @@ def add_noise(d_x_t, snr_db: int = 80) -> np.ndarray:
     mean = np.mean(d_x_t)
     max_value = np.amax(d_x_t)
 
-    snr = 10**(snr_db/10)
+    snr = np.power(10, snr_db / 10.0)  # convert snr from dB to fraction
 
     # sd = mean/snr
     sd = max_value.real/snr
