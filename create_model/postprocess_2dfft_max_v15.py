@@ -268,20 +268,23 @@ def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx) -> Tuple[np.ndarray, np.n
     return fg, kg, abs_fft_data
 
 
-def add_noise(d_x_t, snr: int = 80) -> np.ndarray:
+def add_noise(d_x_t, snr_db: int = 80) -> np.ndarray:
     """
     Adds random noise to the displacement x time data to simulate real noisy measurements
     and accounts for imperfectness in simulation model
 
     :param
         - d_x_t: np.array - displacement x time array with respective sampling nodes on y-axis and time on x-axis
-        - snr: int - signal-to-noise ratio of signal and newly created noise
+        - snr_db: int - signal-to-noise ratio in dB of signal and newly created noise
     :return:
         - d_x_t_noisy: np.array - same dimensions as d_x_t but with added random noise
     """
     noise = np.zeros(d_x_t.shape)
     mean = np.mean(d_x_t)
     max_value = np.amax(d_x_t)
+
+    snr = 10**(snr_db/10)
+
     # sd = mean/snr
     sd = max_value.real/snr
 
