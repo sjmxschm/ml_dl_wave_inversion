@@ -698,7 +698,8 @@ def store_fft_data(
         abs_fft_data,
         fg,
         kg,
-        sim_info
+        sim_info,
+        snr: int = None
 ) -> None:
     """
     Save 2D-FFT data to files, as well es corresponding frequency and wavenumber grid
@@ -711,8 +712,12 @@ def store_fft_data(
         - fg - frequency grid
         - kg - wavenumber grid
         - sim_info - dictionary with simulation information
+        - snr - signal-to-noise ratio used in the data (might be none for no added noise)
     """
     file_name, _ = path.splitext(data_file)
+    if snr is not None:
+        file_name = f"{file_name}_{snr}"
+
     output_name_spectrum = file_name + '_2dfft_sp_' + str(sim_info['c_height']) + '.csv'
     output_name_fg = file_name + '_2dfft_fg_' + str(sim_info['c_height']) + '.csv'
     output_name_kg = file_name + '_2dfft_kg_' + str(sim_info['c_height']) + '.csv'
