@@ -1,6 +1,9 @@
 # Local & data heavy directories
 create_model/2dfft_data_selected/
 
+# PACE cluster related files
+.pbs
+
 ## Python specific .gitignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
