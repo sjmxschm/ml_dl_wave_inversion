@@ -846,6 +846,8 @@ def non_maximum_suppression(
     fft_fltr = np.multiply(fft_data.copy(), fft_data > np.median(fft_data))
     fft_fltr = my_unsqueeze_2_torch(fft_fltr)
 
+    print(fft_fltr.shape)
+
     mp = nn.MaxPool2d(kernel_size=kernel, stride=1, padding=int(kernel // 2))
 
     fft_mp = mp(fft_fltr)
@@ -853,6 +855,8 @@ def non_maximum_suppression(
     fft_out = np.multiply(my_squeeze_2_np(fft_bin), fft_data)  # extract only MAXs from fft_data
 
     fft_p = fft_out
+
+    print(fft_p.shape)
 
     # -- get coordinates of maxima
     b = np.where(fft_p != 0)
