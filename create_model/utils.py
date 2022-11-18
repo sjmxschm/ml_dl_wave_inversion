@@ -831,7 +831,7 @@ def non_maximum_suppression(
             - clip_tr=1 - threshold for clipping, a high clipping value
                 (e.g. 1 = clipping off)
             - plot_flag=False - specify if the extration cones should be
-                visualized
+                visualized. Watch out, here the pixel values are plotted
             - save_flag=False - specify if NMS coords should be stored
     """
     if x_lim is None:
@@ -856,10 +856,14 @@ def non_maximum_suppression(
 
     fft_p = fft_out
 
-    print(fft_p.shape)
+    print(f"fft_p.shape = {fft_p.shape}")
 
     # -- get coordinates of maxima
     b = np.where(fft_p != 0)
+
+    print(f"len(b[0]) = {len(b[0])}")
+    print(f"b = {b}")
+
     c = np.zeros((len(b[0])))  # intensity values at b locations
     # k = 26000 #250
     for i, (x, y) in enumerate(zip(b[0], b[1])):
