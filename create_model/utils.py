@@ -812,8 +812,8 @@ def non_maximum_suppression(
         returns:
             - fft_data - clipped and removed all data below median of
                 input fft_data,
-            - x - x-coords of NMS maxima,
-            - y - y-coords of NMW maxima
+            - x - x-coords of NMS maxima (in pixel space),
+            - y - y-coords of NMW maxima (in pixel space)
 
         args:
             - fft_data - 2D-FFT data matrix
