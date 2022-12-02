@@ -261,7 +261,7 @@ def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx) -> Tuple[np.ndarray, np.n
     fft_data = np.fft.fftshift(np.fft.fft2(displacement_x_time))  # *dx*dt
     print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
 
-    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistant with older data
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistent with older data
 
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
 

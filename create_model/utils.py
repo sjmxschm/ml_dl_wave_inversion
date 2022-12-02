@@ -804,7 +804,8 @@ def non_maximum_suppression(
         y_lim: list = None,
         clip_tr: float = 1.0,
         plot_flag: bool = False,
-        save_flag: bool = False
+        save_flag: bool = False,
+        dpi: int = 600,
 ) -> tuple:
     """
         do non-maximum-suppression using Pytorch
@@ -902,7 +903,7 @@ def non_maximum_suppression(
     x, y = np.array(x), np.array(y)
 
     if plot_flag:
-        plt.figure(1, dpi=600)
+        plt.figure(1, dpi=dpi)
         plt.contourf(fft_out, 200, cmap='Spectral')
         plt.scatter(x, y, color='lime', marker='2', alpha=0.7, s=0.5)
         xl_plot = np.linspace(0, 700)
