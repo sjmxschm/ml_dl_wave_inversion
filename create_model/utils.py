@@ -1,6 +1,8 @@
 import pathlib
 from os import listdir, path, remove
 from os.path import isfile, join
+from typing import Tuple
+import time
 
 import numpy as np
 import matplotlib
@@ -1150,26 +1152,6 @@ def parse_input_variables(input_list):
     return sd
 
 
-def send_push_msg(
-        push_text='Abaqus pipeline completed'
-):
-    """
-    send push notification to smartphone with Pushbullet
-
-    https://www.pushbullet.com/
-
-    The API_KEY is specific to each device and needs to be changed
-    on pushbullets webpage accordingly
-
-    args:
-        - push_text - string - message which should be displayed on smartphone
-    """
-    API_KEY = 'o.xMOSkBmQDarX5EOJLzMnKDfxiPPxzFXi'
-
-    pb = Pushbullet(API_KEY)
-    push = pb.push_note('New Simulation Pipeline Message', push_text)
-
-
 def send_slack_message(
         message: str = "Abaqus pipeline completed"
 ):
@@ -1192,3 +1174,145 @@ def send_slack_message(
     url = 'https://hooks.slack.com/services/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'
     response = requests.post(url, data=payload)
     # print(response.text)
+
+
+def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, int, int]:
+    """
+    Inverts the 2D-FFT data, such that the representation in the frequency-wavenumber is
+    converted into the time-displacement domain
+
+    :arg:
+        - fg - ndarray - frequency grid where unique frequencies are along axis 0
+        - kg - ndarray - wavenumber grid where unique wavenumbers are along axis 1
+        - fft_abs - ndarray - 2D-FFT transformed data from simulation data
+        - sim_info - dict - simulation information file with meta-information
+
+    :return:
+        - displacement_x_time - ndarray - array containing the time x displacement values reconstructed from 2D-FFt
+        - dt - float - sampling time of simulation
+        - dx - float - spatial sampling location difference
+        - Nt - int - number of samples in time
+        - Nx - int - number of sampling locations in space
+    """
+    fft_original = np.fft.fftshift(fft_abs)
+
+    ## WATCH OUT I MIXED K AND F IN THE MESHGRID FUNCTION IN THE 2D-FFT FUNCTION! MIX IT BACK HERE
+    k = fg[0, :]  # first row contains unique frequencies
+    f = kg[:, 0]  # first columns contains unique wavenumbers
+
+    ny_f, ny_k = f[-1], k[-1]
+
+    dt = 1.0 / (2 * ny_f)
+    dx = 1.0 / (2 * ny_k)
+
+    Nt = f.shape[0] * 2  # quadrant 2,3,4 were cut, so Nt is actually twice as big
+    Nx = k.shape[0] * 2  # quadrant 2,3,4 were cut, so Nx is actually twice as big
+
+    tMax = Nt * dt
+    xMax = Nx * dx
+
+    display_2dfft_values = False
+    if display_2dfft_values:
+        print(f"Nt = {Nt}, Nx = {Nx}")
+        print(f"f[-3::] = {f[-3::]}")
+        print(f"k[-3::] = {k[-3::]}")
+        print(f"f[0:3] = {f[0:3]}")
+        print(f"k[0:3] = {k[0:3]}")
+        print(f"ny_f = {ny_f}")
+        print(f"ny_k = {ny_k}")
+        print(f"dt = {dt}")
+        print(f"dx = {dx}")
+        print(f"tMax = {tMax}")
+        print(f"xMax = {xMax}")
+
+    assert sim_info['msmt_len'] == round(xMax, 2), \
+        f"There is a missmatch in the measurement length!" \
+        f"\n> sim_info['msmt_len'] = {sim_info['msmt_len']} " \
+        f"not equal to xMax = {xMax}, with dx = {dx}!"
+    assert sim_info['t_sampling'] == round(dt, 8), \
+        f"Sampling times do not match" \
+        f"\n> sim_info['sampling_time'] = {sim_info['sampling_time']} " \
+        f"not equal to xMax = {dt}!"
+
+    # TODO: apply ifft2 to get back the time displacement data (invert 2D-FFT)
+    displacement_x_time = np.fft.ifft2(fft_original)
+
+    # TODO: create new apply_2dfft function which uses this data as an input, otherwise are xMax and tMax be available?
+    return displacement_x_time, dt, dx, Nt, Nx
+
+
+def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Re-apply 2D-FFT transform to the noisy displacement data in the time-displacement domain which was
+    originally transformed back from the frequency-wavenumber space
+
+    :arg:
+        - time_x_displacement - ndarray - array containing the time x displacement values reconstructed from 2D-FFT
+        - dt - float - sampling time of simulation
+        - dx - float - spatial sampling location difference
+        - Nt - int - number of samples in time
+        - Nx - int - number of sampling locations in space
+
+    :returns:
+        fg: mesh array with frequencies
+        kg: mesh array with wave numbers
+        abs_fft_data: absolute values after 2D-FFT transform
+    """
+    fg = None
+    kg = None
+    abs_fft_data = None
+
+    # Get k, f intervals
+    ny_f = 1.0 / (2 * dt)
+    ny_k = 1.0 / (2 * dx)
+
+    k = np.linspace(-ny_k, ny_k, num=Nx)
+    f = np.linspace(-ny_f, ny_f, num=Nt)
+
+    # apply 2D FFT
+    start_time = time.time()
+    fft_data = np.fft.fftshift(np.fft.fft2(displacement_x_time))  # *dx*dt
+    print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
+
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistent with older data
+
+    abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
+
+    return fg, kg, abs_fft_data
+
+
+def add_noise(d_x_t, snr_db: int = 80) -> np.ndarray:
+    """
+    Adds random noise to the displacement x time data to simulate real noisy measurements
+    and accounts for imperfectness in simulation model
+
+    :param
+        - d_x_t: np.array - displacement x time array with respective sampling nodes on y-axis and time on x-axis
+        - snr_db: int - signal-to-noise ratio in dB of signal and newly created noise
+    :return:
+        - d_x_t_noisy: np.array - same dimensions as d_x_t but with added random noise
+    """
+    noise = np.zeros(d_x_t.shape)
+    mean = np.mean(d_x_t)
+    max_value = np.amax(d_x_t)
+
+    snr = np.power(10, snr_db / 10.0)  # convert snr from dB to fraction
+
+    # sd = mean/snr
+    sd = max_value.real/snr
+
+    noise = np.random.normal(noise, sd, d_x_t.shape)
+
+    d_x_t_noisy = d_x_t + noise
+
+    print_values = False
+    if print_values:
+        print(d_x_t.shape)
+        print(F"mean = {mean} -> {mean.real}")
+        print(F"mean = {max_value} -> {max_value.real}")
+        print(f"sd = {sd}")
+        print(f"d_x_t_noisy.shape = {d_x_t_noisy.shape}")
+        print(f"noise = \n{noise}")
+        print(f"d_x_t_noisy =\n{d_x_t_noisy}")
+
+    return d_x_t_noisy
