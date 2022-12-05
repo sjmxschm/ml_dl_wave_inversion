@@ -46,7 +46,7 @@ created by: Max Schmitz on 09/29/2021
 
 """
 
-from parameter_sets import load_param_sets
+from parameter_sets import load_param_sets, get_values_from_param_set
 
 
 def copy2folder(file, parent_dir, folder) -> None:
@@ -65,32 +65,32 @@ def copy2folder(file, parent_dir, folder) -> None:
     copyfile(src, dst)
 
 
-def get_values_from_param_set(
-        param_set: str,
-        attribute: str = 'coating_height=',
-        factor: float = 1E6,
-        formatting: str = '.5f'
-) -> float:
-    """
-    Function finds attribute in param_set and returns corresponding value in format
-    defined by formatting
-
-    args:
-        - param_set: string which contains all attributes with numerical values
-            e.g. ' -- plate_width=0.08 -- coating_height=0.00010'
-        - attribute: attribute to which the numerical value should be returned
-            e.g. 'coating_height=' (IMPORTANT: include the '=' sign in string)
-        - factor: factor to scale the decimal power to a nicer number
-            e.g. 0.0004 * 1E4= 4
-        - formatting: specify how the output float should be formatted
-
-    """
-    start_idx = str(param_set).find(attribute) + len(attribute)
-    end_idx = str(param_set).find(' --', start_idx)
-    value = float(str(param_set)[start_idx:end_idx]) * factor
-    value = format(value, formatting).rstrip('0')
-    # print(value)
-    return value
+# def get_values_from_param_set(
+#         param_set: str,
+#         attribute: str = 'coating_height=',
+#         factor: float = 1E6,
+#         formatting: str = '.5f'
+# ) -> float:
+#     """
+#     Function finds attribute in param_set and returns corresponding value in format
+#     defined by formatting
+#
+#     args:
+#         - param_set: string which contains all attributes with numerical values
+#             e.g. ' -- plate_width=0.08 -- coating_height=0.00010'
+#         - attribute: attribute to which the numerical value should be returned
+#             e.g. 'coating_height=' (IMPORTANT: include the '=' sign in string)
+#         - factor: factor to scale the decimal power to a nicer number
+#             e.g. 0.0004 * 1E4= 4
+#         - formatting: specify how the output float should be formatted
+#
+#     """
+#     start_idx = str(param_set).find(attribute) + len(attribute)
+#     end_idx = str(param_set).find(' --', start_idx)
+#     value = float(str(param_set)[start_idx:end_idx]) * factor
+#     value = format(value, formatting).rstrip('0')
+#     # print(value)
+#     return value
 
 
 def run_parallel_sims():

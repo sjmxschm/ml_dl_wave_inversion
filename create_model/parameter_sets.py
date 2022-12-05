@@ -11,7 +11,6 @@ on: 12/05/2022
 
 """
 
-
 def load_param_sets():
     """
     Loads and returns param_sets. Make sure that every single param_set is in one
@@ -7063,104 +7062,193 @@ def load_param_sets():
     # ]
     # 56 simulations in sim space gaps
 
-    # simulate for Steel-Alu combination
+    # # simulate for Steel-Alu combination
+    # param_sets = [
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000200'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000100'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000050'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000600'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000300'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.002'
+    #     ' -- cg_gap_depth=0.000000'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- coating_density=7900.0'
+    #     ' -- coating_youngs_mod=200000000000'
+    #     ' -- coating_pois_rat=0.3'
+    #     ' -- base_plate_density=2700.0'
+    #     ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
+    #     ' -- base_plate_pois_rat=0.36'
+    #     ' -- ',
+    # ]
+
     param_sets = [
-        ' -- plate_width=0.08'
-        ' -- coating_height=0.000200'
-        ' -- base_plate_height=0.001'
-        ' -- t_sampling=0.00000002'
-        ' -- cg_top_left=0.001'
-        ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
-        ' -- ',
         ' -- plate_width=0.08'
         ' -- coating_height=0.000100'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
         ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
-        ' -- ',
-        ' -- plate_width=0.08'
-        ' -- coating_height=0.000050'
-        ' -- base_plate_height=0.001'
-        ' -- t_sampling=0.00000002'
-        ' -- cg_top_left=0.001'
-        ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
-        ' -- ',
-        ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
-        ' -- base_plate_height=0.001'
-        ' -- t_sampling=0.00000002'
-        ' -- cg_top_left=0.001'
-        ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
-        ' -- ',
-        ' -- plate_width=0.08'
-        ' -- coating_height=0.000600'
-        ' -- base_plate_height=0.001'
-        ' -- t_sampling=0.00000002'
-        ' -- cg_top_left=0.001'
-        ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
-        ' -- ',
-        ' -- plate_width=0.08'
-        ' -- coating_height=0.000300'
-        ' -- base_plate_height=0.001'
-        ' -- t_sampling=0.00000002'
-        ' -- cg_top_left=0.001'
-        ' -- cg_top_right=0.001'
-        ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000000'
-        ' -- base_plate_height=0.001'
-        ' -- coating_density=7900.0'
-        ' -- coating_youngs_mod=200000000000'
-        ' -- coating_pois_rat=0.3'
-        ' -- base_plate_density=2700.0'
-        ' -- base_plate_youngs_mod=68000000000'  # 99.300.000.000
-        ' -- base_plate_pois_rat=0.36'
+        ' -- cg_bevel=0.001'
+        ' -- cg_gap_depth=0.000040'
         ' -- ',
     ]
 
     return param_sets
+
+
+def get_values_from_param_set(
+        param_set: str,
+        attribute: str = 'coating_height=',
+        factor: float = 1E6,
+        formatting: str = '.5f'
+) -> float:
+    """
+    Function finds attribute in param_set and returns corresponding value in format
+    defined by formatting
+
+    args:
+        - param_set: string which contains all attributes with numerical values
+            e.g. ' -- plate_width=0.08 -- coating_height=0.00010'
+        - attribute: attribute to which the numerical value should be returned
+            e.g. 'coating_height=' (IMPORTANT: include the '=' sign in string)
+        - factor: factor to scale the decimal power to a nicer number
+            e.g. 0.0004 * 1E4= 4
+        - formatting: specify how the output float should be formatted
+
+    """
+    start_idx = str(param_set).find(attribute) + len(attribute)
+    end_idx = str(param_set).find(' --', start_idx)
+    value = float(str(param_set)[start_idx:end_idx]) * factor
+    value = format(value, formatting).rstrip('0')
+    # print(value)
+    return value
+
+
+def check_duplicate_params(p_sets: list, p_infos_fn: str):
+    """
+    check_duplicate_params() is comparing the new parameter list for upcoming simulations and
+    compares it to simulations already conducted. If a parameter combination has been simulated
+    already before, it does not need to be simulated again.
+
+    :arg:
+        -   p_sets: a list of parameters
+
+    :return:
+        -   p_sets_updated: the previous list of parameters but without the duplicates
+    """
+
+    for p_set in p_sets:
+        # TODO: 1. extract the numerical values needed from the parameter sets
+        c_height = get_values_from_param_set(p_set, attribute='coating_height=',
+                                          factor=1E6, formatting='.1f')
+
+        cg_top_left = get_values_from_param_set(p_set, attribute='cg_top_left=',
+                                                factor=1E3, formatting='.1f')
+
+        cg_bevel = get_values_from_param_set(p_set, attribute='cg_bevel=',
+                                             factor=1E3, formatting='.1f')
+
+        cg_top_right = get_values_from_param_set(p_set, attribute='cg_top_right=',
+                                                 factor=1E3, formatting='.1f')
+
+        cg_gap_depth = get_values_from_param_set(p_set, attribute='cg_gap_depth=',
+                                                 factor=1E6, formatting='3.1f')  # formatting was '.1f'
+
+        print(f"{c_height},{cg_top_left},{cg_bevel},{cg_top_right},{cg_gap_depth}")
+
+        # TODO: 2. compare the numerical values with the parameters of simulations already conducted
+
+        # TODO: 3. output an information about if and if yes, which simulations are duplicates and
+        #   need to be removed
+
+    return p_sets
+
+
+if __name__ == '__main__':
+    param_infos_file_name = '12-05_14-59-48param_infos'
+
+    param_sets = load_param_sets()
+
+    check_duplicate_params(param_sets, param_infos_file_name)
+
