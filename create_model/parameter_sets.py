@@ -1,7 +1,7 @@
 """
 contains the parameters sets which should be simulated.
 
-Old and used parameters sets are commented out
+Old and used parameters sets are commented out. This file is imported in run_parallel_simulations.py
 
 """
 
