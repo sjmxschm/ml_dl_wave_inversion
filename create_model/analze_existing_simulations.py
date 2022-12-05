@@ -21,7 +21,10 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
     for each simulation and puts them into a dataframe with dimension
     (#simulations x 5)
 
-    This function has been adapted from "extract_sim_information_from_folders" from "visualize_dataset.py"
+    Remarks:
+    - This function has been adapted from "extract_sim_information_from_folders" from "visualize_dataset.py"
+    - Make sure that there are only the needed files (this one, visualize_dataset, utils and the __pycache__)
+        and folders in the directory
 
     :arg:
         - path: Path object with path to working directory
@@ -32,7 +35,7 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
 
     """
 
-    folders = [elem for elem in os.listdir(path) if elem.find('old') == -1]
+    folders = [elem for elem in os.listdir(path) if (elem.find('old') == -1 and elem.find('py') == -1)]
 
     sim_infos = pd.DataFrame(columns=[
         'c_height', 'cg_top_left', 'cg_bevel', 'cg_top_right', 'cg_gap_depth'])
@@ -90,12 +93,12 @@ def visualize_feats(
     fig.set_size_inches(w=6, h=4)
     ax = plt.gca()
 
-    sim_color = ['g' if elem == 0 else 'r' for elem in sim_df['cg_gap_depth'].tolist()]
-    sim_markers = ["D" if elem == 0 else "o" for elem in sim_df['cg_gap_depth'].tolist()]
-    sim_size = [6 if elem == 0 else 10 for elem in sim_df['cg_gap_depth'].tolist()]
+    sim_color = ['g' if elem == 0.0 else 'r' for elem in sim_df['cg_gap_depth'].tolist()]
+    sim_markers = ["D" if elem == 0.0 else "o" for elem in sim_df['cg_gap_depth'].tolist()]
+    sim_size = [6 if elem == 0.0 else 10 for elem in sim_df['cg_gap_depth'].tolist()]
 
     for idx in range(len(sim_color)):
-        ax.scatter(sim_df['c_height'] * 1E6, sim_df['cg_gap_depth'] * 1E6, s=sim_size[idx],
+        ax.scatter(sim_df['c_height'].iloc[idx] * 1E6, sim_df['cg_gap_depth'].iloc[idx] * 1E6, s=sim_size[idx],
                    c=sim_color[idx], marker=sim_markers[idx], alpha=0.8)
 
     x = np.linspace(0, 600, 100)
@@ -109,17 +112,17 @@ def visualize_feats(
     plt.xlabel(r'Coating thickness in $\mu$m (1E-6m)')
     plt.ylabel(r'Gap depth in $\mu$m (1E-6m)')
     if save:
-        plt.savefig(Path.cwd() / 'figures_param_space' /
+        plt.savefig(Path.cwd() / 'figures_param_space_py' /
                     f"{creation_date}_sim_params_space.png", dpi=200)
-        out_name = Path.cwd() / 'figures_param_space' / \
-                   f"{creation_date}_sim_params_space.pgf"
-        plt.savefig(out_name, backend='pgf', format='pgf', dpi=200)
+        # out_name = Path.cwd() / 'figures_param_space_py' / \
+        #            f"{creation_date}_sim_params_space.pgf"
+        # plt.savefig(out_name, backend='pgf', format='pgf', dpi=200)
     plt.show()
 
 
 if __name__ == '__main__':
-    save_param_infos = True
-    save_visualization = True
+    save_param_infos = False
+    save_visualization = False
 
     working_path = Path(
         'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
