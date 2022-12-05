@@ -1,7 +1,13 @@
 """
-contains the parameters sets which should be simulated.
-
+Contains the parameters sets that have been or should be simulated.
 Old and used parameters sets are commented out. This file is imported in run_parallel_simulations.py
+
+Additionally, before starting the simulation with new parameter sets, run this file by itself. This way,
+a comparison with previously simulated parameter sets is conducted and already simulated parameter
+combinations will be removed.
+
+created by: Maximilian Schmitz
+on: 12/05/2022
 
 """
 
