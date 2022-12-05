@@ -122,11 +122,14 @@ if __name__ == '__main__':
     save_param_infos = True
     save_visualization = False
 
-    working_path = Path(
-        'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
-        'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
-        'cluster_simulations_example'
-    )
+    try:
+        working_path = Path(
+            'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
+            'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
+            'cluster_simulations_example'
+        )
+    except FileNotFoundError:
+        working_path = Path(__file__)
 
     param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)
 

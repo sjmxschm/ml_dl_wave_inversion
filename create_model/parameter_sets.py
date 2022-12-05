@@ -7280,10 +7280,10 @@ def check_duplicate_params(p_sets: list, p_infos_fn: str):
     return p_sets_updated, p_sets_duplicates
 
 
-def print_param_sets(p_sets):
+def print_param_sets(p_sets) -> None:
     """
     function prints out each parameter set to a new line
-    :param p_set: a list with each element being a simulation parameter set
+    :param p_sets: a list with each element being a simulation parameter set
     :return:
     """
     print('___ ___ ___ ___ ___ ___')
