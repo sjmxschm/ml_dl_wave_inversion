@@ -11,6 +11,8 @@ on: 12/05/2022
 
 """
 
+import pandas as pd
+
 def load_param_sets():
     """
     Loads and returns param_sets. Make sure that every single param_set is in one
@@ -7172,6 +7174,15 @@ def load_param_sets():
         ' -- cg_bevel=0.001'
         ' -- cg_gap_depth=0.000040'
         ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000225'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.003'
+        ' -- cg_gap_depth=0.000100'
+        ' -- ',
     ]
 
     return param_sets
@@ -7181,7 +7192,8 @@ def get_values_from_param_set(
         param_set: str,
         attribute: str = 'coating_height=',
         factor: float = 1E6,
-        formatting: str = '.5f'
+        formatting: str = '.5f',
+        rm_trailing_zeros: bool = True
 ) -> float:
     """
     Function finds attribute in param_set and returns corresponding value in format
@@ -7200,7 +7212,8 @@ def get_values_from_param_set(
     start_idx = str(param_set).find(attribute) + len(attribute)
     end_idx = str(param_set).find(' --', start_idx)
     value = float(str(param_set)[start_idx:end_idx]) * factor
-    value = format(value, formatting).rstrip('0')
+    if rm_trailing_zeros:
+        value = format(value, formatting).rstrip('0')
     # print(value)
     return value
 
@@ -7217,38 +7230,74 @@ def check_duplicate_params(p_sets: list, p_infos_fn: str):
     :return:
         -   p_sets_updated: the previous list of parameters but without the duplicates
     """
+    p_sets_updated = []
+    p_sets_duplicates = []
+
+    duplicate_count = 0
+
+    p_infos = pd.read_csv(p_infos_fn)
 
     for p_set in p_sets:
-        # TODO: 1. extract the numerical values needed from the parameter sets
+        # 1. extract the numerical values needed from the parameter sets
         c_height = get_values_from_param_set(p_set, attribute='coating_height=',
-                                          factor=1E6, formatting='.1f')
+                                             factor=1, rm_trailing_zeros=False)
 
         cg_top_left = get_values_from_param_set(p_set, attribute='cg_top_left=',
-                                                factor=1E3, formatting='.1f')
+                                                factor=1, rm_trailing_zeros=False)
 
         cg_bevel = get_values_from_param_set(p_set, attribute='cg_bevel=',
-                                             factor=1E3, formatting='.1f')
+                                             factor=1, rm_trailing_zeros=False)
 
         cg_top_right = get_values_from_param_set(p_set, attribute='cg_top_right=',
-                                                 factor=1E3, formatting='.1f')
+                                                 factor=1, rm_trailing_zeros=False)
 
         cg_gap_depth = get_values_from_param_set(p_set, attribute='cg_gap_depth=',
-                                                 factor=1E6, formatting='3.1f')  # formatting was '.1f'
+                                                 factor=1, rm_trailing_zeros=False)  # formatting was '.1f'
 
         print(f"{c_height},{cg_top_left},{cg_bevel},{cg_top_right},{cg_gap_depth}")
 
-        # TODO: 2. compare the numerical values with the parameters of simulations already conducted
+        # 2. compare the numerical values with the parameters of simulations already conducted
+        if (
+                (p_infos['c_height'] == c_height) &
+                (p_infos['cg_top_left'] == cg_top_left) &
+                (p_infos['cg_bevel'] == cg_bevel) &
+                (p_infos['cg_top_right'] == cg_top_right) &
+                (p_infos['cg_gap_depth'] == cg_gap_depth)
+        ).any():
+            duplicate_count += 1
+            p_sets_duplicates.append(p_set)
+        else:
+            p_sets_updated.append(p_set)
 
-        # TODO: 3. output an information about if and if yes, which simulations are duplicates and
+        # 3. output an information about if and if yes, which simulations are duplicates and
         #   need to be removed
+        if not duplicate_count == 0:
+            print(f"There have been >> {duplicate_count} << duplicates found. "
+                  f"Please remove them before submitting simulations!")
+        else:
+            print("No duplicates have been found!")
 
-    return p_sets
+    return p_sets_updated, p_sets_duplicates
+
+
+def print_param_sets(p_sets):
+    """
+    function prints out each parameter set to a new line
+    :param p_set: a list with each element being a simulation parameter set
+    :return:
+    """
+    print('___ ___ ___ ___ ___ ___')
+    for p_set in p_sets:
+        print(p_set)
+        print('___ ___ ___ ___ ___ ___')
 
 
 if __name__ == '__main__':
-    param_infos_file_name = '12-05_14-59-48param_infos'
+    param_infos_file_name = '12-05_14-59-48param_infos.csv'
 
     param_sets = load_param_sets()
 
-    check_duplicate_params(param_sets, param_infos_file_name)
+    param_sets_updated, param_sets_dups = check_duplicate_params(param_sets, param_infos_file_name)
 
+    print(param_sets_updated)
+    print_param_sets(param_sets_dups)
