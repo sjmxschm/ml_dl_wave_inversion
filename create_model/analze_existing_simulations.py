@@ -33,7 +33,6 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
     """
 
     folders = [elem for elem in os.listdir(path) if elem.find('old') == -1]
-    print(f"folders: {folders}")
 
     sim_infos = pd.DataFrame(columns=[
         'c_height', 'cg_top_left', 'cg_bevel', 'cg_top_right', 'cg_gap_depth'])
@@ -120,19 +119,19 @@ def visualize_feats(
 
 if __name__ == '__main__':
     save_param_infos = True
-    save_visualization = False
+    save_visualization = True
 
-    try:
-        working_path = Path(
-            'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
-            'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
-            'cluster_simulations_example'
-        )
-    except FileNotFoundError:
-        working_path = Path(__file__)
+    working_path = Path(
+        'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
+        'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
+        'cluster_simulations_example'
+    )
+    if not working_path.is_dir():
+        working_path = Path(__file__).parent.resolve()  # in case of cluster
+        print(f"working path = {working_path}")
 
     param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)
 
     visualize_feats(param_infos, save=save_visualization)
 
-    print(param_infos)
+    #print(param_infos)
