@@ -30,7 +30,7 @@ def load_json_info_file(data_path: Path) -> dict:
             json simulation info file
     """
     try:
-        print(f'data_path = {data_path}')
+        # print(f'data_path = {data_path}')
         json_info_file, _ = get_newest_file_name(data_path, extension='.json')
         with open(data_path / json_info_file) as info_file:
             sim_info = json.load(info_file)

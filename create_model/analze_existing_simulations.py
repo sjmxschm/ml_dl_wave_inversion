@@ -6,6 +6,7 @@ are running.
 
 """
 import os
+import tqdm
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -40,7 +41,7 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
     sim_infos = pd.DataFrame(columns=[
         'c_height', 'cg_top_left', 'cg_bevel', 'cg_top_right', 'cg_gap_depth'])
 
-    for idx, folder in enumerate(folders):
+    for idx, folder in enumerate(tqdm(folders)):
         sim_info = load_json_info_file(path / folder)
 
         c_height = sim_info['c_height']
@@ -121,8 +122,8 @@ def visualize_feats(
 
 
 if __name__ == '__main__':
-    save_param_infos = False
-    save_visualization = False
+    save_param_infos = True
+    save_visualization = True
 
     working_path = Path(
         'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
