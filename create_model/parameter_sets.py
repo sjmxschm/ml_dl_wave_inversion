@@ -13,6 +13,7 @@ on: 12/05/2022
 
 import pandas as pd
 from pathlib import Path
+from tqdm import tqdm
 
 def load_param_sets():
     """
@@ -22,7 +23,7 @@ def load_param_sets():
     make sure there is an ' -- ' at the end of the file!
 
     returns:
-        - param_sets (list): list with parameters to simulate. Different param_set s
+        - param_sets (list): list with parameters to simulate. Different param_sets
             are separated elements of the list
     """
 
@@ -30,7 +31,7 @@ def load_param_sets():
     # # first, address area between 100 and 200 microns coating thickness
     # # batch 1
     param_sets = [
-            # 110
+        # 110
         ' -- plate_width=0.08'
         ' -- coating_height=0.000110'
         ' -- base_plate_height=0.001'
@@ -102,9 +103,54 @@ def load_param_sets():
         ' -- cg_top_left=0.001'
         ' -- cg_top_right=0.001'
         ' -- cg_bevel=0.002'
-        ' -- cg_gap_depth=0.000070'
+        ' -- cg_gap_depth=0.000010'
         ' -- ',
-                ' -- plate_width=0.08'
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000120'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000020'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000120'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000030'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000120'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000040'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000120'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000120'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000060'
+        ' -- ',
+        ' -- plate_width=0.08'
         ' -- coating_height=0.000120'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
@@ -113,8 +159,63 @@ def load_param_sets():
         ' -- cg_bevel=0.002'
         ' -- cg_gap_depth=0.000070'
         ' -- ',
-                        ' -- plate_width=0.08'
-        ' -- coating_height=0.000120'
+        # 130
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000010'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000020'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000030'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000040'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000060'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -122,6 +223,226 @@ def load_param_sets():
         ' -- cg_bevel=0.002'
         ' -- cg_gap_depth=0.000070'
         ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000130'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000080'
+        ' -- ',
+        # 140 # 22 simulations until here
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000010'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000020'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000030'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000040'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000060'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000070'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000080'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000140'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000090'
+        ' -- ',
+        # 150
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000010'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000020'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000030'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000040'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000060'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000070'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000150'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000090'
+        ' -- ',
+        # 160 # 41 until here
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000010'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000020'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000030'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000040'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000160'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.002'
+        ' -- cg_gap_depth=0.000060'
+        ' -- ',
+        # 45 simulations in total
     ]
 
     return param_sets
@@ -177,7 +498,7 @@ def check_duplicate_params(p_sets: list, p_infos_fn: Path):
 
     p_infos = pd.read_csv(p_infos_fn)
 
-    for p_set in p_sets:
+    for p_set in tqdm(p_sets):
         # 1. extract the numerical values needed from the parameter sets
         c_height = get_values_from_param_set(p_set, attribute='coating_height=',
                                              factor=1, rm_trailing_zeros=False)
@@ -211,11 +532,11 @@ def check_duplicate_params(p_sets: list, p_infos_fn: Path):
 
         # 3. output an information about if and if yes, which simulations are duplicates and
         #   need to be removed
-        if not duplicate_count == 0:
-            print(f"There have been >> {duplicate_count} << duplicates found. "
-                  f"Please remove them before submitting simulations!")
-        else:
-            print("No duplicates have been found!")
+    if not duplicate_count == 0:
+        print(f"There have been >> {duplicate_count} << duplicates found. "
+              f"Please remove them before submitting simulations!")
+    else:
+        print("No duplicates have been found!")
 
     return p_sets_updated, p_sets_duplicates
 
@@ -233,6 +554,10 @@ def print_param_sets(p_sets) -> None:
 
 
 if __name__ == '__main__':
+    """
+    run this script before starting the simulations to check for duplicates in the simulation paramters
+    """
+
     param_infos_file_name = Path(__file__).parent.resolve() / '2dfft_data_selected' \
                             / 'param_infos' / '12-05_18-43-50param_infos.csv'
 

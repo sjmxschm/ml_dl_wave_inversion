@@ -152,15 +152,6 @@ def run_parallel_sims():
         except FileExistsError:
             print('Folder already exists, continue with it and start simulation in it')
 
-        # copy_files = [
-        #     'create_model_script_v15.py',
-        #     'extract_disp_history_max_v5.py',
-        #     'postprocess_2dfft_max_v15.py',
-        #     'run_automated_simulations_cluster.py',
-        #     'run_parallel_on_cluster.pbs',
-        #     'run_simulation.py',
-        #     'utils.py'
-        # ]
         for c_file in copy_files:
             copy2folder(c_file, parent_dir, folder)
 
