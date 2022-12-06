@@ -66,6 +66,8 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
 
         sim_infos = pd.concat([sim_infos, new_info])
 
+    print(f"There are {len(sim_infos.index)} simulations which can be used")
+
     if save:
         fn = get_creation_date() + 'param_infos.csv'
         sim_infos.to_csv(fn, index=False)
