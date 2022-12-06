@@ -104,6 +104,7 @@ def run_parallel_sims():
     copy_files = [
         'create_model_script_v15.py',
         'extract_disp_history_max_v5.py',
+        'parameter_sets.py',
         'postprocess_2dfft_max_v15.py',
         'run_automated_simulations_cluster.py',
         'run_parallel_on_cluster.pbs',
