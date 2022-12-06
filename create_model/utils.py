@@ -1,7 +1,7 @@
 import pathlib
 from os import listdir, path, remove
 from os.path import isfile, join
-from typing import Tuple
+from typing import Tuple, Union
 import time
 
 import numpy as np
@@ -415,15 +415,15 @@ def plot_sim_and_analy_data(
         kg: np.ndarray,
         fft_data: np.ndarray,
         plt_res: int,
-        ka_cr: np.ndarray,
-        fa_cr: np.ndarray,
-        mn_cr: np.ndarray,
-        ka_zy4cr: np.ndarray,
-        fa_zy4cr: np.ndarray,
-        mn_zy4cr: np.ndarray,
-        ka_zy: np.ndarray,
-        fa_zy: np.ndarray,
-        mn_zy: np.ndarray,
+        ka_cr: Union[np.ndarray, None],
+        fa_cr: Union[np.ndarray, None],
+        mn_cr: Union[np.ndarray, None],
+        ka_zy4cr: Union[np.ndarray, None],
+        fa_zy4cr: Union[np.ndarray, None],
+        mn_zy4cr: Union[np.ndarray, None],
+        ka_zy: Union[np.ndarray, None],
+        fa_zy: Union[np.ndarray, None],
+        mn_zy: Union[np.ndarray, None],
         sim_info: str,
         output_file: str,
         plt_type: str = 'contf',
@@ -797,9 +797,9 @@ def my_squeeze_2_np(image) -> np.array:
 
 
 def non_maximum_suppression(
-        fft_data: float,
+        fft_data: np.ndarray,
         data_file: str,
-        sim_path: str,
+        sim_path: Union[str, pathlib.Path],
         kernel: int = 21,
         gradient: list = None,
         x_lim: list = None,
@@ -820,6 +820,8 @@ def non_maximum_suppression(
 
         args:
             - fft_data - 2D-FFT data matrix
+            - data_file - name of the data file for saving the x-y
+                coordinates after non-maximum suppression
             - json_info_file - simulation information dictionary
             - sim_path - path to simulation files
             - kernel=21 - size of kernel for max pooling, needs to be odd,
