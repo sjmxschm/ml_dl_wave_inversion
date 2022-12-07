@@ -1,5 +1,6 @@
 # Local & data heavy directories
 create_model/2dfft_data_selected/
+create_model/slack_url.py
 
 # PACE cluster related files
 .pbs

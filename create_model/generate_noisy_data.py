@@ -60,7 +60,7 @@ def create_noisy_files(
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)]
 
     for folder in tqdm(folders):
-        print(f'> folder: {folder}')
+        print(f'\n> folder: {folder}')
 
         fn, is_transformed = get_newest_file_name(
             d_path / folder,
@@ -71,7 +71,7 @@ def create_noisy_files(
         print(f'>> filename = {fn}')
 
         fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
-        print('>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+        print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
 
         displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
         print('>>> 2D-FFT data has been inverted to displacement-time data!')
@@ -158,7 +158,15 @@ def create_noisy_files(
 
 if __name__ == '__main__':
     # TODO: adjust this for the cluster/local machine with try except
-    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
+    # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
+    # # for cluster:
+    # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
+
+    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
+    if not data_path.is_dir():
+        working_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        print(f"working path = {data_path}")
+
     signal_to_noise_ratio_db = 40
     kernel_size_nms = 15
 
