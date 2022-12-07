@@ -84,11 +84,11 @@ def create_noisy_files(
         c_t = 0.0001
         abs_fft_data_n_c, x, y = non_maximum_suppression(
             abs_fft_data_n,
-            data_file=f"{data_file}_n_{snr}_k_{kernel}________",
+            data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
             sim_path=d_path / folder,
             clip_tr=c_t,
             kernel=kernel,
-            save_flag=True,
+            save_flag=save_features,
             plot_flag=False
         )
         print(">>> Non-maximum-suppression has finished!")
@@ -96,7 +96,7 @@ def create_noisy_files(
         feat_lin = extract_features(lin_func, x, y, fg, kg)
         feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
         if save_features:
-            with open(d_path / feat_file_name, 'w') as f:
+            with open(d_path / folder / feat_file_name, 'w') as f:
                 np.savetxt(f, feat_lin, delimiter=',')
         print(">>> Feature-extraction finished!")
 
@@ -106,11 +106,11 @@ def create_noisy_files(
             d_path / folder,
             sim_info['job_name'],
             sim_info['c_height'],
-            plt_type, plt_res, save_cnn
+            plt_type, plt_res, save_cnn,
+            snr=snr, kernel=kernel
         )
-        output_file = output_file + f'_n_{snr}_k_{kernel}_cnn.png'
         print(f"output_file={output_file}")
-        if save_cnn:
+        if save_cnn or save_plot_normal:
             plot_sim_and_analy_data(
                 fg,
                 kg,
@@ -131,10 +131,11 @@ def create_noisy_files(
                 fa_zy=None,
                 mn_zy=None,
                 axis=False,
+                m_axis=[0, 8000, 0, 2.5E7],
                 clip_threshold=c_t,
                 add_analytical=False,
-                add_fit=False,
-                add_scatter=False,
+                add_fit=True,
+                add_scatter=True,
                 save_CNN=save_cnn,
                 save_flag=save_plot_normal,
                 show_plot=False,
@@ -144,11 +145,12 @@ def create_noisy_files(
         if save_data:
             store_fft_data(
                 fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
-                d_path,
+                d_path / folder,
                 abs_fft_data_n_c,
                 fg_n,
                 kg_n,
-                sim_info
+                sim_info,
+                snr=snr
             )
             print(">>> New, noisy 2D-FFT data was successfully saved!")
         print(">>>> Pipeline for current simulation finished\n_________________")
@@ -165,7 +167,7 @@ if __name__ == '__main__':
         snr=signal_to_noise_ratio_db,
         kernel=kernel_size_nms,
         save_features=True,
-        save_plot_normal=True,
-        save_cnn=False,
+        save_plot_normal=False,
+        save_cnn=True,
         save_data=True
     )

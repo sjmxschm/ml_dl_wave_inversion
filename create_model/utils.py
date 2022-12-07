@@ -42,6 +42,8 @@ import requests
 
 from scipy.optimize import curve_fit
 
+from slack_url import slackurl
+
 """
 This file contains all helper functions which are needed for the work.
 Either single functions or the whole script can be imported
@@ -425,7 +427,7 @@ def plot_sim_and_analy_data(
         fa_zy: Union[np.ndarray, None],
         mn_zy: Union[np.ndarray, None],
         sim_info: str,
-        output_file: str,
+        output_file: Union[str, pathlib.Path],
         plt_type: str = 'contf',
         x: np.ndarray = None,
         y: np.ndarray = None,
@@ -717,12 +719,15 @@ def store_fft_data(
         - snr - signal-to-noise ratio used in the data (might be none for no added noise)
     """
     file_name, _ = path.splitext(data_file)
-    if snr is not None:
-        file_name = f"{file_name}_{snr}"
 
-    output_name_spectrum = file_name + '_2dfft_sp_' + str(sim_info['c_height']) + '.csv'
-    output_name_fg = file_name + '_2dfft_fg_' + str(sim_info['c_height']) + '.csv'
-    output_name_kg = file_name + '_2dfft_kg_' + str(sim_info['c_height']) + '.csv'
+    if snr is not None:
+        output_name_spectrum = file_name + '.csv'
+        output_name_fg = file_name + '.csv'
+        output_name_kg = file_name + '.csv'
+    else:
+        output_name_spectrum = file_name + '_2dfft_sp_' + str(sim_info['c_height']) + '.csv'
+        output_name_fg = file_name + '_2dfft_fg_' + str(sim_info['c_height']) + '.csv'
+        output_name_kg = file_name + '_2dfft_kg_' + str(sim_info['c_height']) + '.csv'
 
     if path.exists(data_path / output_name_spectrum):
         pass
@@ -738,7 +743,7 @@ def store_fft_data(
 
 
 def get_output_name(data_path, file_name, c_thick, plt_type,
-                    plt_res, save_cnn, snr=Union[int, None], kernel=Union[int, None]) -> pathlib.Path:
+                    plt_res, save_cnn, snr: int = None, kernel: int = None) -> pathlib.Path:
     """
     create the name of the plot output file. Name will be the same as
     the .csv data input file but with time stamp of creation added
@@ -764,7 +769,7 @@ def get_output_name(data_path, file_name, c_thick, plt_type,
     if snr is None:
         noise_tail = ''
     else:
-        noise_tail = f'n_{snr}_k_{kernel}'
+        noise_tail = f'_n_{snr}_k_{kernel}'
 
     output_file = file_name + '_' \
                   + str(today.strftime("%m-%d")) \
@@ -1176,17 +1181,21 @@ def send_slack_message(
     make sure there is an app created so that the Webhook URL can be accessed:
     Workspace>Settings>Manage Apps>Add new>...
 
+    How to create a Webhook URL is explained here:
+    https://api.slack.com/messaging/webhooks
+
     If you are using this and do not know what this means, I (Max) would be happy when
     you would comment out this function/url/the request.post() command so I do not
     receive all the simulation messages from you to my personal Slack workspace
+    -> this is not needed since I am importing my personal url from a file which
+        I will not share with you :)
 
     args:
         - message - string - message which should be send to smartphone/Slack desktop
     """
     payload = '{"text":"%s"}' % message
-    url = 'https://hooks.slack.com/services/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'
+    url = slackurl  #'https://hooks.slack.com/services/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'
     response = requests.post(url, data=payload)
-    # print(response.text)
 
 
 def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, int, int]:
