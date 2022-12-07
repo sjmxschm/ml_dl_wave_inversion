@@ -89,7 +89,7 @@ def get_newest_file_name(
         data_path,
         job_name='max_analysis_job',
         extension='.csv'
-) -> str:
+) -> Tuple:
     """
     searches the current working directory
     and returns the name of the newest csv file

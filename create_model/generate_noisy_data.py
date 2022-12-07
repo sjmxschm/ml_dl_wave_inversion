@@ -70,89 +70,95 @@ def create_noisy_files(
         data_file = fn[0:37]
         print(f'>> filename = {fn}')
 
-        fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
-        print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+        # check if the noisy data for given snr and kernel are already existing
+        # if (d_path / Path(data_file[0:-4] + f'n_{snr}_k_{kernel}.csv')).exists():
+        #     print(f'noisy data >{data_file[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
+        if data_file.find(f'_{snr}_k_{kernel}'):
+            print(f'noisy data >{data_file[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
+        else:
+            fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
+            print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
 
-        displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
-        print('>>> 2D-FFT data has been inverted to displacement-time data!')
+            displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
+            print('>>> 2D-FFT data has been inverted to displacement-time data!')
 
-        displacement_x_time_n = add_noise(displacement_x_time, snr_db=snr)
-        print(f'>>> noise with SNR = {snr} was added to displacement data!')
+            displacement_x_time_n = add_noise(displacement_x_time, snr_db=snr)
+            print(f'>>> noise with SNR = {snr} was added to displacement data!')
 
-        fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
-        print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
+            fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
+            print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
 
-        c_t = 0.0001
-        abs_fft_data_n_c, x, y = non_maximum_suppression(
-            abs_fft_data_n,
-            data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
-            sim_path=d_path / folder,
-            clip_tr=c_t,
-            kernel=kernel,
-            save_flag=save_features,
-            plot_flag=False
-        )
-        print(">>> Non-maximum-suppression has finished!")
-
-        feat_lin = extract_features(lin_func, x, y, fg, kg)
-        feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
-        if save_features:
-            with open(d_path / folder / feat_file_name, 'w') as f:
-                np.savetxt(f, feat_lin, delimiter=',')
-        print(">>> Feature-extraction finished!")
-
-        plt_type = 'contf'
-        plt_res = 300
-        output_file = get_output_name(
-            d_path / folder,
-            sim_info['job_name'],
-            sim_info['c_height'],
-            plt_type, plt_res, save_cnn,
-            snr=snr, kernel=kernel
-        )
-        if save_cnn or save_plot_normal:
-            plot_sim_and_analy_data(
-                fg,
-                kg,
-                abs_fft_data_n_c,
-                sim_info=sim_info,
-                output_file=output_file,
-                x=x,
-                y=y,
-                plt_type=plt_type,
-                plt_res=plt_res,
-                ka_cr=None,
-                fa_cr=None,
-                mn_cr=None,
-                ka_zy4cr=None,
-                fa_zy4cr=None,
-                mn_zy4cr=None,
-                ka_zy=None,
-                fa_zy=None,
-                mn_zy=None,
-                axis=False,
-                m_axis=[0, 8000, 0, 2.5E7],
-                clip_threshold=c_t,
-                add_analytical=False,
-                add_fit=True,
-                add_scatter=True,
-                save_CNN=save_cnn,
-                save_flag=save_plot_normal,
-                show_plot=False,
+            c_t = 0.0001
+            abs_fft_data_n_c, x, y = non_maximum_suppression(
+                abs_fft_data_n,
+                data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
+                sim_path=d_path / folder,
+                clip_tr=c_t,
+                kernel=kernel,
+                save_flag=save_features,
+                plot_flag=False
             )
-            print(">>> Plotting and saving of CNN data finished!")
+            print(">>> Non-maximum-suppression has finished!")
 
-        if save_data:
-            store_fft_data(
-                fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
+            feat_lin = extract_features(lin_func, x, y, fg, kg)
+            feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+            if save_features:
+                with open(d_path / folder / feat_file_name, 'w') as f:
+                    np.savetxt(f, feat_lin, delimiter=',')
+            print(">>> Feature-extraction finished!")
+
+            plt_type = 'contf'
+            plt_res = 300
+            output_file = get_output_name(
                 d_path / folder,
-                abs_fft_data_n_c,
-                fg_n,
-                kg_n,
-                sim_info,
-                snr=snr
+                sim_info['job_name'],
+                sim_info['c_height'],
+                plt_type, plt_res, save_cnn,
+                snr=snr, kernel=kernel
             )
-            print(">>> New, noisy 2D-FFT data was successfully saved!")
+            if save_cnn or save_plot_normal:
+                plot_sim_and_analy_data(
+                    fg,
+                    kg,
+                    abs_fft_data_n_c,
+                    sim_info=sim_info,
+                    output_file=output_file,
+                    x=x,
+                    y=y,
+                    plt_type=plt_type,
+                    plt_res=plt_res,
+                    ka_cr=None,
+                    fa_cr=None,
+                    mn_cr=None,
+                    ka_zy4cr=None,
+                    fa_zy4cr=None,
+                    mn_zy4cr=None,
+                    ka_zy=None,
+                    fa_zy=None,
+                    mn_zy=None,
+                    axis=False,
+                    m_axis=[0, 8000, 0, 2.5E7],
+                    clip_threshold=c_t,
+                    add_analytical=False,
+                    add_fit=True,
+                    add_scatter=True,
+                    save_CNN=save_cnn,
+                    save_flag=save_plot_normal,
+                    show_plot=False,
+                )
+                print(">>> Plotting and saving of CNN data finished!")
+
+            if save_data:
+                store_fft_data(
+                    fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
+                    d_path / folder,
+                    abs_fft_data_n_c,
+                    fg_n,
+                    kg_n,
+                    sim_info,
+                    snr=snr
+                )
+                print(">>> New, noisy 2D-FFT data was successfully saved!")
         print(">>>> Pipeline for current simulation finished\n_________________")
 
 
@@ -164,8 +170,8 @@ if __name__ == '__main__':
 
     data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     if not data_path.is_dir():
-        working_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
-        print(f"working path = {data_path}")
+        data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        print(f"data_path = {data_path}")
 
     signal_to_noise_ratio_db = 40
     kernel_size_nms = 15
