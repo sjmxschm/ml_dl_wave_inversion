@@ -16,6 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from pathlib import Path
+from tqdm import tqdm
 
 from utils import (
     get_newest_file_name,
@@ -58,7 +59,7 @@ def create_noisy_files(
 
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)]
 
-    for folder in folders:
+    for folder in tqdm(folders):
         print(f'> folder: {folder}')
 
         fn, is_transformed = get_newest_file_name(
@@ -109,7 +110,6 @@ def create_noisy_files(
             plt_type, plt_res, save_cnn,
             snr=snr, kernel=kernel
         )
-        print(f"output_file={output_file}")
         if save_cnn or save_plot_normal:
             plot_sim_and_analy_data(
                 fg,
@@ -158,7 +158,7 @@ def create_noisy_files(
 
 if __name__ == '__main__':
     # TODO: adjust this for the cluster/local machine with try except
-    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
+    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
     signal_to_noise_ratio_db = 40
     kernel_size_nms = 15
 
