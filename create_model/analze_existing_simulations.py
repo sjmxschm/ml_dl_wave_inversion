@@ -4,6 +4,9 @@ into a dataframe for further analysis. The idea is to get a list of existing sim
 given parameters to double-check if the parameter combination is already existing when new simulations
 are running.
 
+This file needs to be put at user/scratch/ which is the same level as the 'simulations' folder.
+There is no extra scheduler script because this script will run on the end node.
+
 """
 import os
 import numpy as np
@@ -133,7 +136,7 @@ if __name__ == '__main__':
         'cluster_simulations_example'
     )
     if not working_path.is_dir():
-        working_path = Path(__file__).parent.resolve()  # in case of cluster
+        working_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         print(f"working path = {working_path}")
 
     param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)

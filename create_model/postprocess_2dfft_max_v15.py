@@ -210,12 +210,13 @@ def postprocessing_2dfft(
     """
 
     # -- Specify folder to work in/where data lays
-    cur_path = pathlib.Path(__file__).resolve()
+    cur_path = pathlib.Path(__file__).parent.resolve()
     # handle that there is no sim_path on cluster
-    if cluster:
+    if cluster and sim_path is None:
         # data_path = cur_path.parent.resolve()  # was it before
+        data_path = cur_path
+    elif cluster and sim_path is not None:
         data_path = sim_path
-        # data_path = cur_path
     else:
         # data_path = pathlib.Path(__file__).parents[1].resolve() / 'analysis_2dfft'
         data_path = pathlib.Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'

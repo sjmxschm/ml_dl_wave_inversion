@@ -65,27 +65,18 @@ white_list = ['.py',
               '.png',
               '.txt']
 
-# --- 1. create parameter list ((TODO:) better: load parameter list from external file later)
-# test with stable but nonsense values (short simulation time)
-# param_sets = ['plate_width=0.001 -- '
-#               'coating_height=0.00001 -- '
-#               'base_plate_height=0.00001 -- '
-#               't_period=0.00000092'
-#               ]
-
 # do not need any parameter since no simulation is conducted here
 param_sets = ['1']
 
-print('______ simulation pipeline was started ______')
-# send_push_msg('CLUSTER: Abaqus simulation pipeline started')
-send_slack_message('CLUSTER: Abaqus simulation pipeline started')
+folders = [elem for elem in os.listdir(Path.cwd())
+               if elem.find('old') == -1 and not Path(Path.cwd() / elem).is_file()]
+print(folders)
+
+print('______ postprocessing pipeline was started ______')
+send_slack_message('CLUSTER: postprocessng pipeline started')
 
 i = 1
-for param_set in param_sets:  # tqdm(param_sets):
-    # print(f'\n-> current param_set to simulate: \n{param_set}\n')
-    print('\n-> current param_set to simulate: \n%s\n' % (param_set))
-    # send_push_msg('\n-> current param_set to simulate: \n%s\ntime: %s' % (param_set, start_time))
-    send_slack_message('\n-> current param_set to simulate: \n%s\ntime: %s' % (param_set, start_time))
+for folder in folders:
 
     # --- 2. conduct simulation in Abaqus with 'run_simulation()
     ''' input to command line needs to be: abaqus cae noGUI=run_simulation.py -- variable_name1=variable_value1 ...
@@ -124,7 +115,7 @@ for param_set in param_sets:  # tqdm(param_sets):
     # send_slack_message(str('CLUSTER: extraction completed after %s min' % (extraction_time / 60)))
 
     postprocessing_2dfft(
-        # sim_path=Path.cwd() / folder,
+        sim_path=Path.cwd() / folder,
         plot=True,
         show=True,
         save=True,
@@ -143,20 +134,10 @@ for param_set in param_sets:  # tqdm(param_sets):
     # send_push_msg('CLUSTER: simulation completed after %s s' % (fft_time))
     send_slack_message('CLUSTER: simulation completed after %s min' % (fft_time/60))
 
-    folders = [elem for elem in os.listdir(Path.cwd())
-               if elem.find('old') == -1 and not Path(Path.cwd() / elem).is_file()]
-    print(folders)
-    for folder in folders:
-
-        delete_unwanted_files(white_list, cur_path=Path.cwd() / folder)
-    # print('-----> unnecessary files deleted - NOT now')
-
-    # # --- 6. (TODO:) store simulation information file and extracted 2dfft data
-    # #               in meaningful way (e.g. subfolders with thickness of plate as name)
+    delete_unwanted_files(white_list, cur_path=Path.cwd() / folder)
+    print('-----> unnecessary files deleted')
 
     # -- 7. give push update after each single simulation
-    # send_push_msg('Simulation pipeline %s out of %s completed\n'
-    #               'start time = %s' % (i, len(param_sets), start_time))
     send_slack_message('Simulation pipeline %s out of %s completed\n'
                        'start time = %s' % (i, len(param_sets), start_time))
     i += 1
@@ -164,7 +145,5 @@ for param_set in param_sets:  # tqdm(param_sets):
 runtime = time.time() - start_time
 print('runtime of pipeline was: %s min' % (runtime/60))
 print('______ simulation pipeline finished ______ ')
-# send_push_msg('CLUSTER: Abaqus simulation pipeline finished after %s s\n'
-#               'start time = %s' % (runtime, start_time))
 send_slack_message('CLUSTER: Abaqus simulation pipeline finished after %s min\n'
                    'start time = %s' % (runtime/60, start_time))
