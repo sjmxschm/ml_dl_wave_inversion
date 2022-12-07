@@ -75,79 +75,6 @@ white_list = ['.py',
               ]
               # '.odb']
 
-# --- 1. create parameter list ((TODO:) better: load parameter list from external file later)
-# test with stable but nonsense values (short simulation time)
-# param_sets = ['plate_width=0.001 -- '
-#               'coating_height=0.00001 -- '
-#               'base_plate_height=0.00001 -- '
-#               't_period=0.00000092'
-#               ]
-
-# # 0.2
-# param_sets = [
-#     ' -- plate_width=0.08'
-#     ' -- coating_height=0.00002'
-#     ' -- base_plate_height=0.001'
-#     ' -- t_sampling=2E-8'
-# ]
-
-##############################################
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.00009'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000125'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000175'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- ',
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000225'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000275'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000325'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
-# param_sets = [
-#         ' -- plate_width=0.08'
-#         ' -- coating_height=0.000375'
-#         ' -- base_plate_height=0.001'
-#         ' -- t_sampling=0.00000002'
-#         ' -- '
-# ]
-
 print('______ extract parameters from command line ______')
 sd = parse_input_variables(sys.argv)
 print('sys.argv of run_automated_cluster.py is %s' % str(sd))
@@ -192,6 +119,7 @@ for param_set in param_sets:
     sim_time = time.time() - start_time
     send_slack_message('-> Parameters: %s\n'
                        'simulation completed after %s h\n' % (sim_specs, sim_time/(60**2)))
+    send_slack_message('\n|-> current param_set to simulate: \n%s' % str(param_set))
 
     q = Popen(
         # q = subprocess.run(

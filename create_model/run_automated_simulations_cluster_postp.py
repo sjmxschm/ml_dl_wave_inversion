@@ -73,7 +73,7 @@ folders = [elem for elem in os.listdir(Path.cwd())
 print(folders)
 
 print('______ postprocessing pipeline was started ______')
-send_slack_message('CLUSTER: postprocessng pipeline started')
+send_slack_message('CLUSTER: postprocessing pipeline started')
 
 i = 1
 for folder in folders:
@@ -139,7 +139,7 @@ for folder in folders:
 
     # -- 7. give push update after each single simulation
     send_slack_message('Simulation pipeline %s out of %s completed\n'
-                       'start time = %s' % (i, len(param_sets), start_time))
+                       'start time = %s' % (i, len(folders), start_time))
     i += 1
 
 runtime = time.time() - start_time
