@@ -54,6 +54,8 @@ def create_noisy_files(
     :param save_data: specifies if the noisy and newly created 2D-FFT data should be saved in folder
     :return:
     """
+    assert not save_plot_normal == save_cnn, "Only one save flag can be active at a time!! Neglect if both are False"
+
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)]
 
     for folder in folders:
@@ -82,8 +84,8 @@ def create_noisy_files(
         c_t = 0.0001
         abs_fft_data_n_c, x, y = non_maximum_suppression(
             abs_fft_data_n,
-            f"{data_file}_n_{snr}_k_{kernel}",
-            d_path,
+            data_file=f"{data_file}_n_{snr}_k_{kernel}________",
+            sim_path=d_path / folder,
             clip_tr=c_t,
             kernel=kernel,
             save_flag=True,
@@ -92,25 +94,27 @@ def create_noisy_files(
         print(">>> Non-maximum-suppression has finished!")
 
         feat_lin = extract_features(lin_func, x, y, fg, kg)
-        feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin.txt'
+        feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
         if save_features:
-            with open(data_path / feat_file_name, 'w') as f:
+            with open(d_path / feat_file_name, 'w') as f:
                 np.savetxt(f, feat_lin, delimiter=',')
         print(">>> Feature-extraction finished!")
 
         plt_type = 'contf'
         plt_res = 300
         output_file = get_output_name(
-            data_path,
+            d_path / folder,
             sim_info['job_name'],
             sim_info['c_height'],
             plt_type, plt_res, save_cnn
         )
+        output_file = output_file + f'_n_{snr}_k_{kernel}_cnn.png'
+        print(f"output_file={output_file}")
         if save_cnn:
             plot_sim_and_analy_data(
                 fg,
                 kg,
-                abs_fft_data,
+                abs_fft_data_n_c,
                 sim_info=sim_info,
                 output_file=output_file,
                 x=x,
@@ -152,7 +156,7 @@ def create_noisy_files(
 
 if __name__ == '__main__':
     # TODO: adjust this for the cluster/local machine with try except
-    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
+    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     signal_to_noise_ratio_db = 40
     kernel_size_nms = 15
 
@@ -161,7 +165,7 @@ if __name__ == '__main__':
         snr=signal_to_noise_ratio_db,
         kernel=kernel_size_nms,
         save_features=True,
-        save_plot_normal=False,
-        save_cnn=True,
+        save_plot_normal=True,
+        save_cnn=False,
         save_data=True
     )

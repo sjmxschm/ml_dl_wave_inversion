@@ -727,14 +727,18 @@ def store_fft_data(
     if path.exists(data_path / output_name_spectrum):
         pass
     else:
-        np.savetxt(data_path / output_name_spectrum, abs_fft_data, delimiter=',')
-        np.savetxt(data_path / output_name_fg, fg, delimiter=',')
-        np.savetxt(data_path / output_name_kg, kg, delimiter=',')
+        if snr is not None:
+            # save only new spectrum for new noisy data
+            np.savetxt(data_path / output_name_spectrum, abs_fft_data, delimiter=',')
+        else:
+            np.savetxt(data_path / output_name_spectrum, abs_fft_data, delimiter=',')
+            np.savetxt(data_path / output_name_fg, fg, delimiter=',')
+            np.savetxt(data_path / output_name_kg, kg, delimiter=',')
         print(f'Output file of 2D-FFT {data_file} has been created.')
 
 
 def get_output_name(data_path, file_name, c_thick, plt_type,
-                    plt_res, save_cnn) -> str:
+                    plt_res, save_cnn, snr=Union[int, None], kernel=Union[int, None]) -> pathlib.Path:
     """
     create the name of the plot output file. Name will be the same as
     the .csv data input file but with time stamp of creation added
@@ -750,10 +754,17 @@ def get_output_name(data_path, file_name, c_thick, plt_type,
         - c_thick: thickness of coating
         - plt_type: which plotting type is used (cont or contf)
         - plt_res: which plotting resolution is used
+        - snr: signal-to-noise ratio in dB if given for noisy sample
+        - kernel: kernel of NMS for noisy sample if given
     """
     now = datetime.now()
     current_time = now.strftime("%H-%M-%S")
     today = date.today()
+
+    if snr is None:
+        noise_tail = ''
+    else:
+        noise_tail = f'n_{snr}_k_{kernel}'
 
     output_file = file_name + '_' \
                   + str(today.strftime("%m-%d")) \
@@ -765,7 +776,7 @@ def get_output_name(data_path, file_name, c_thick, plt_type,
                   + str(plt_res) \
                   + '_' \
                   + str(int(c_thick*1E6)) \
-                  + '.png'
+                  + f'{noise_tail}.png'
     if save_cnn:
         output_file = file_name + '_' \
                       + str(today.strftime("%m-%d")) \
@@ -777,7 +788,7 @@ def get_output_name(data_path, file_name, c_thick, plt_type,
                       + str(plt_res) \
                       + '_' \
                       + str(int(c_thick * 1E6)) \
-                      + '_cnn' \
+                      + f'{noise_tail}_cnn' \
                       + '.png'
     return data_path / output_file
 
@@ -1236,10 +1247,9 @@ def invert_2dfft(fg, kg, fft_abs, sim_info) -> Tuple[np.ndarray, float, float, i
         f"\n> sim_info['sampling_time'] = {sim_info['sampling_time']} " \
         f"not equal to xMax = {dt}!"
 
-    # TODO: apply ifft2 to get back the time displacement data (invert 2D-FFT)
+    # apply ifft2 to get back the time displacement data (invert 2D-FFT)
     displacement_x_time = np.fft.ifft2(fft_original)
 
-    # TODO: create new apply_2dfft function which uses this data as an input, otherwise are xMax and tMax be available?
     return displacement_x_time, dt, dx, Nt, Nx
 
 
@@ -1260,9 +1270,6 @@ def reapply_2dfft(displacement_x_time, dt, dx, Nt, Nx) -> Tuple[np.ndarray, np.n
         kg: mesh array with wave numbers
         abs_fft_data: absolute values after 2D-FFT transform
     """
-    fg = None
-    kg = None
-    abs_fft_data = None
 
     # Get k, f intervals
     ny_f = 1.0 / (2 * dt)
