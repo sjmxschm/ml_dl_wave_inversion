@@ -78,15 +78,15 @@ send_slack_message('CLUSTER: postprocessing pipeline started')
 i = 1
 for folder in folders:
     # --- 1. check if the files that should be created in the following are already existing
-    i = 0
+    j = 0
     folder_path = Path(__file__).parent.resolve() / folder
     for file in folder_path.glob('*.png'):
-        i += 1
+        j += 1
         print(f'>> The file \n{file}\nexists already! Move on to the next folder.')
         send_slack_message(f'>> The file \n{file}\nexists already! Move on to the next folder.')
         break
 
-    if not i == 0:
+    if not j == 0:
         print(f'>> The folder {folder} includes the requested data already! Move forward!')
         send_slack_message(f'>> The folder {folder} includes the requested data already! Move forward!')
     else:
@@ -144,7 +144,7 @@ for folder in folders:
         print('----> postprocessing (2DFFT) completed')
         fft_time = time.time() - start_time
         # send_push_msg('CLUSTER: simulation completed after %s s' % (fft_time))
-        send_slack_message('CLUSTER: simulation completed after %s min' % (fft_time/60))
+        send_slack_message('CLUSTER: postprocessing completed after %s min' % (fft_time/60))
 
         delete_unwanted_files(white_list, cur_path=Path.cwd() / folder)
         print('-----> unnecessary files deleted')

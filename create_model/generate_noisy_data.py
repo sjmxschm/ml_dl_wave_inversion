@@ -29,7 +29,8 @@ from utils import (
     plot_sim_and_analy_data,
     extract_features,
     lin_func,
-    get_output_name
+    get_output_name,
+    send_slack_message
 )
 
 
@@ -57,10 +58,12 @@ def create_noisy_files(
     """
     assert not save_plot_normal == save_cnn, "Only one save flag can be active at a time!! Neglect if both are False"
 
-    folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)]
+    folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)
+               and not Path(d_path / elem).is_file()]
 
     for folder in tqdm(folders):
         print(f'\n> folder: {folder}')
+        send_slack_message(f'\n## Noise Generation has started in folder: {folder}')
 
         fn, is_transformed = get_newest_file_name(
             d_path / folder,
@@ -163,14 +166,14 @@ def create_noisy_files(
 
 
 if __name__ == '__main__':
-    # TODO: adjust this for the cluster/local machine with try except
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     # # for cluster:
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
 
     data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     if not data_path.is_dir():
-        data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        data_path = Path(__file__).parent.resolve() / 'batch_1'  # in case of cluster
         print(f"data_path = {data_path}")
 
     signal_to_noise_ratio_db = 40
