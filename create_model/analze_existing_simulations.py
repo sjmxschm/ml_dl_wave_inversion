@@ -5,8 +5,12 @@ given parameters to double-check if the parameter combination is already existin
 are running.
 
 This file needs to be put at user/scratch/ which is the same level as the 'simulations' folder.
-There is no extra scheduler script because this script will run on the end node.
+There is no extra scheduler script because this script will run on the end node. To run this file, write
+##########################################
+>> python3 analze_existing_simulations.py
+##########################################
 
+created by Max Schmitz on 12/03/2022
 """
 import os
 import numpy as np

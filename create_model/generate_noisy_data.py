@@ -1,14 +1,34 @@
 """
 This file contains the code to create noisy data as follows:
 Go through each folder, then for each folder
-	• Find the most recent simulation file
-	• Load the existing 2D-FFT data
-	• Invert the given 2D-FFT data to time-displacement
-	• Add noise in time-displacement domain (use a SNR of 40dB for now)
-	• Retransform with 2D-FFT from time-displacement to frequency-wavenumber domain
-	• Apply non-maximum-suppression to get maxima and save them (find consistent naming scheme)
-	• Fit linear functions, extract features and save them (use consistent naming scheme)
-	• Create CNN image and store it
+• Find the most recent simulation file
+• Load the existing 2D-FFT data
+• Invert the given 2D-FFT data to time-displacement
+• Add noise in time-displacement domain (use a SNR of 40dB for now)
+• Retransform with 2D-FFT from time-displacement to frequency-wavenumber domain
+• Apply non-maximum-suppression to get maxima and save them (find consistent naming scheme)
+• Fit linear functions, extract features and save them (use consistent naming scheme)
+• Create CNN image and store it
+
+To generate the noisy files, this file needs to go one level above the simulation folder. An example folder structure
+would be:
+>> home/simulations_folder/{simulation_1, simulation_2, ..., simulation_n}
+then this script needs to be put into
+>> home/generate_noisy_data.py
+
+This file is not to be run on the end-node. Therefore, a scheduler script is needed. The scheduler script for this
+script is 'generate_noisy_data.pbs' and needs to live in the same folder as this script. The scheduler script is
+started via
+#################################
+>> qsub genenerate_noisy_data.pbs
+#################################
+
+It might need to be converted to unix format first which can be done via
+#####################################
+>> dos2unix genenerate_noisy_data.pbs
+#####################################
+
+This file was created by Max Schmitz on 12/06/2022
 """
 import os
 
@@ -74,10 +94,8 @@ def create_noisy_files(
         print(f'>> filename = {fn}')
 
         # check if the noisy data for given snr and kernel are already existing
-        # if (d_path / Path(data_file[0:-4] + f'n_{snr}_k_{kernel}.csv')).exists():
-        #     print(f'noisy data >{data_file[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
-        if data_file.find(f'_{snr}_k_{kernel}'):
-            print(f'noisy data >{data_file[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
+        if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
+            print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
         else:
             fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
             print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')

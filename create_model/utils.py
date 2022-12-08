@@ -1194,7 +1194,7 @@ def send_slack_message(
         - message - string - message which should be send to smartphone/Slack desktop
     """
     payload = '{"text":"%s"}' % message
-    url = slackurl  #'https://hooks.slack.com/services/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'
+    url = slackurl  # example: 'https://hooks.slack.com/services/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'
     response = requests.post(url, data=payload)
 
 
