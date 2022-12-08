@@ -69,7 +69,7 @@ white_list = ['.py',
 param_sets = ['1']
 
 folders = [elem for elem in os.listdir(Path.cwd())
-               if elem.find('old') == -1 and not Path(Path.cwd() / elem).is_file()]
+               if elem.find('old') == -1 and not Path(Path.cwd() / elem).is_file() and elem.find('py') == -1]
 print(folders)
 
 print('______ postprocessing pipeline was started ______')
@@ -77,65 +77,77 @@ send_slack_message('CLUSTER: postprocessing pipeline started')
 
 i = 1
 for folder in folders:
+    # --- 1. check if the files that should be created in the following are already existing
+    i = 0
+    folder_path = Path(__file__).parent.resolve() / folder
+    for file in folder_path.glob('*.png'):
+        i += 1
+        print(f'>> The file \n{file}\nexists already! Move on to the next folder.')
+        send_slack_message(f'>> The file \n{file}\nexists already! Move on to the next folder.')
+        break
 
-    # --- 2. conduct simulation in Abaqus with 'run_simulation()
-    ''' input to command line needs to be: abaqus cae noGUI=run_simulation.py -- variable_name1=variable_value1 ...
-    -> make sure that the arguments are separated by white spaces and prepended dash. Example:
-    r = os.system(
-        'abaqus cae noGUI=run_simulation.py -- plate_width=0.07 -- base_plate_height=0.0001 -- coating_height=0.0006
-        -- run_it -- num_mesh=0.1')
-    '''
+    if not i == 0:
+        print(f'>> The folder {folder} includes the requested data already! Move forward!')
+        send_slack_message(f'>> The folder {folder} includes the requested data already! Move forward!')
+    else:
+        # --- 2. conduct simulation in Abaqus with 'run_simulation()
+        ''' input to command line needs to be: abaqus cae noGUI=run_simulation.py -- variable_name1=variable_value1 ...
+        -> make sure that the arguments are separated by white spaces and prepended dash. Example:
+        r = os.system(
+            'abaqus cae noGUI=run_simulation.py -- plate_width=0.07 -- base_plate_height=0.0001 -- coating_height=0.0006
+            -- run_it -- num_mesh=0.1')
+        '''
 
-    # r = Popen(
-    #     ['abaqus cae noGUI=run_simulation.py -- %s -- run_it' % (param_set)],
-    #     stdout=PIPE,
-    #     stderr=PIPE,
-    #     shell=True
-    # )
-    # print('r = ' + str(r))
-    # stdout, _ = r.communicate()
-    # print('stdout = ' + str(stdout))
-    # print('--> simulation completed')
-    # sim_time = time.time() - start_time
-    # send_push_msg('CLUSTER: simulation completed after %s s\ntime: %s' % (sim_time, start_time))
+        # r = Popen(
+        #     ['abaqus cae noGUI=run_simulation.py -- %s -- run_it' % (param_set)],
+        #     stdout=PIPE,
+        #     stderr=PIPE,
+        #     shell=True
+        # )
+        # print('r = ' + str(r))
+        # stdout, _ = r.communicate()
+        # print('stdout = ' + str(stdout))
+        # print('--> simulation completed')
+        # sim_time = time.time() - start_time
+        # send_push_msg('CLUSTER: simulation completed after %s s\ntime: %s' % (sim_time, start_time))
 
-    # q = Popen(
-    #     # q = subprocess.run(
-    #     ['abaqus python extract_disp_history_max_v5.py'],
-    #     stdout=PIPE,
-    #     stderr=PIPE,
-    #     shell=True
-    # )
-    # q.wait()
-    # print('q = ' + str(q))
-    # # stdout, _ = q.communicate()
-    # # print('stdout = ' + str(stdout))
-    # extraction_time = time.time() - start_time
-    # print('---> extraction completed after %s min' % (extraction_time / 60))
-    # send_slack_message(str('CLUSTER: extraction completed after %s min' % (extraction_time / 60)))
+        # q = Popen(
+        #     # q = subprocess.run(
+        #     ['abaqus python extract_disp_history_max_v5.py'],
+        #     stdout=PIPE,
+        #     stderr=PIPE,
+        #     shell=True
+        # )
+        # q.wait()
+        # print('q = ' + str(q))
+        # # stdout, _ = q.communicate()
+        # # print('stdout = ' + str(stdout))
+        # extraction_time = time.time() - start_time
+        # print('---> extraction completed after %s min' % (extraction_time / 60))
+        # send_slack_message(str('CLUSTER: extraction completed after %s min' % (extraction_time / 60)))
 
-    postprocessing_2dfft(
-        sim_path=Path.cwd() / folder,
-        plot=True,
-        show=True,
-        save=True,
-        plt_type='contf',
-        plt_res=300,
-        fitting_style='lin',
-        add_analytical=False,
-        add_scatter=False,
-        add_fit=False,
-        clip_threshold=0.0001,
-        m_axis=[0, 17500, 0, 2.5E7],  # [0, 17500, 0, 3E7]
-        cluster=True
-    )
-    print('----> postprocessing (2DFFT) completed')
-    fft_time = time.time() - start_time
-    # send_push_msg('CLUSTER: simulation completed after %s s' % (fft_time))
-    send_slack_message('CLUSTER: simulation completed after %s min' % (fft_time/60))
+        postprocessing_2dfft(
+            sim_path=Path.cwd() / folder,
+            plot=True,
+            show=True,
+            save=True,
+            plt_type='contf',
+            plt_res=300,
+            fitting_style='lin',
+            add_analytical=False,
+            add_scatter=False,
+            add_fit=False,
+            clip_threshold=0.0001,
+            m_axis=[0, 17500, 0, 2.5E7],  # [0, 17500, 0, 3E7]
+            cluster=True
+        )
+        print('----> postprocessing (2DFFT) completed')
+        fft_time = time.time() - start_time
+        # send_push_msg('CLUSTER: simulation completed after %s s' % (fft_time))
+        send_slack_message('CLUSTER: simulation completed after %s min' % (fft_time/60))
 
-    delete_unwanted_files(white_list, cur_path=Path.cwd() / folder)
-    print('-----> unnecessary files deleted')
+        delete_unwanted_files(white_list, cur_path=Path.cwd() / folder)
+        print('-----> unnecessary files deleted')
 
     # -- 7. give push update after each single simulation
     send_slack_message('Simulation pipeline %s out of %s completed\n'
