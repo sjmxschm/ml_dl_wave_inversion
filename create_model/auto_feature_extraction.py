@@ -47,7 +47,7 @@ def copy2folder(file, destination_dir) -> None:
 
 
 def extract_and_move_features(
-        feature_name: str = '_lin_simple.',
+        feature_name: str = '_lin.',
         analysis_path: Path = Path.cwd(),
 ):
     """
@@ -58,9 +58,10 @@ def extract_and_move_features(
     """
 
     if cluster:
-        folders = [elem for elem in os.listdir(analysis_path) if splitext(elem)[1] == '.']
+        folders = [elem for elem in os.listdir(analysis_path) if splitext(elem)[1] == '.'
+                   and elem.find('export') == -1 and elem.find('py') == -1]
     else:
-        folders = [elem for elem in os.listdir(analysis_path) if elem.find('old') == -1]
+        folders = [elem for elem in os.listdir(analysis_path) if elem.find('export') == -1]
 
     # # select only folders in certain range:
     # folders = [elem for elem in folders if 200 <= int(elem[0:3]) <= 300]
@@ -81,11 +82,16 @@ def extract_and_move_features(
             uniform_folders.append(folder)
 
     folders = uniform_folders
-    print(f'>>>>> There are {len(folders)} folder to analyze <<<<<')
+    print(f'>>>>> There are {len(folders)} folders to analyze <<<<<')
 
-    output_folder = 'old_' + feature_name[1::].rstrip('.') + '_thesis'
+    # create export folder for features
+    output_folder = 'export_' + feature_name[1::].rstrip('.') + '_paper_review'
+    output_path = Path(analysis_path / output_folder)
+    if not output_path.is_dir():
+        output_path.mkdir(exist_ok=False)
+        print(f'>>> New output directory was created at:\n>{output_path}')
 
-    print(f'There are {len(folders)} folders to analyse')
+    # print(f'There are {len(folders)} folders to analyse')
 
     copied_folders = []
     error_files = []
@@ -103,12 +109,12 @@ def extract_and_move_features(
                         save_file = f'{int(file[0]) + 1}' + file[1::]
 
                     copy2folder(analysis_path / folder / file,
-                                analysis_path / output_folder / save_file)
+                                output_path / save_file)
 
                     sim_file_name = file[0:file.find('features')] + 'info.json'
                     save_sim_file_name = save_file[0:save_file.find('features')] + 'info.json'
                     copy2folder(analysis_path / folder / sim_file_name,
-                                analysis_path / output_folder / save_sim_file_name)
+                                output_path / save_sim_file_name)
                     exists = True
                     copied_folders.append(folder)
 
@@ -154,13 +160,14 @@ def extract_and_move_features(
 
 
 if __name__ == '__main__':
-    cluster = False
+    cluster = True
 
     if not cluster:
         # path = Path.cwd().parent.resolve() / 'analysis_2dfft'
-        path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
+        # path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
+        path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
     else:
         path = Path.cwd().resolve()
 
     extract_and_move_features(analysis_path=path,
-                              feature_name='_lin_local.')
+                              feature_name='_lin_n_40_k_15.')

@@ -867,7 +867,7 @@ def non_maximum_suppression(
     fft_fltr = np.multiply(fft_data.copy(), fft_data > np.median(fft_data))
     fft_fltr = my_unsqueeze_2_torch(fft_fltr)
 
-    print(fft_fltr.shape)
+    # print(fft_fltr.shape)
 
     mp = nn.MaxPool2d(kernel_size=kernel, stride=1, padding=int(kernel // 2))
 
@@ -877,13 +877,13 @@ def non_maximum_suppression(
 
     fft_p = fft_out
 
-    print(f"fft_p.shape = {fft_p.shape}")
+    # print(f"fft_p.shape = {fft_p.shape}")
 
     # -- get coordinates of maxima
     b = np.where(fft_p != 0)
 
-    print(f"len(b[0]) = {len(b[0])}")
-    print(f"b = {b}")
+    # print(f"len(b[0]) = {len(b[0])}")
+    # print(f"b = {b}")
 
     c = np.zeros((len(b[0])))  # intensity values at b locations
     # k = 26000 #250
@@ -918,7 +918,7 @@ def non_maximum_suppression(
     x = x_new
     y = y_new
 
-    print(f'number of maxima detected: {len(x_new)}')
+    print(f'> number of maxima detected in nms: {len(x_new)}')
 
     x, y = np.array(x), np.array(y)
 

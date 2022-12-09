@@ -79,8 +79,9 @@ def create_noisy_files(
     assert not save_plot_normal == save_cnn, "Only one save flag can be active at a time!! Neglect if both are False"
 
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)
-               and not Path(d_path / elem).is_file()]
+               and not Path(d_path / elem).is_file() and elem.find('export') == -1]
 
+    incomplete_simulations = []
     for folder in tqdm(folders):
         print(f'\n> folder: {folder}')
         send_slack_message(f'\n## Noise Generation has started in folder: {folder}')
@@ -90,7 +91,12 @@ def create_noisy_files(
             job_name='max_analysis_job',
             extension='.csv'
         )
-        data_file = fn[0:37]
+        try:
+            data_file = fn[0:37]
+        except TypeError:
+            incomplete_simulations.append(folder)
+            print(f'########> No corresponding displacement .csv files found in folder {folder}!!!')
+            continue
         print(f'>> filename = {fn}')
 
         # check if the noisy data for given snr and kernel are already existing
@@ -181,6 +187,7 @@ def create_noisy_files(
                 )
                 print(">>> New, noisy 2D-FFT data was successfully saved!")
         print(">>>> Pipeline for current simulation finished\n_________________")
+        send_slack_message(f'\n## Noise Generation has finished in folder: {folder}')
 
 
 if __name__ == '__main__':
@@ -190,9 +197,9 @@ if __name__ == '__main__':
 
     data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     if not data_path.is_dir():
-        # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         # data_path = Path(__file__).parent.resolve() / 'batch_1'  # in case of cluster
-        data_path = Path(__file__).parent.resolve() / 'batch_2'  # in case of cluster
+        # data_path = Path(__file__).parent.resolve() / 'batch_2'  # in case of cluster
         print(f"data_path = {data_path}")
 
     signal_to_noise_ratio_db = 40
