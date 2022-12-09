@@ -191,7 +191,8 @@ if __name__ == '__main__':
     data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     if not data_path.is_dir():
         # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
-        data_path = Path(__file__).parent.resolve() / 'batch_1'  # in case of cluster
+        # data_path = Path(__file__).parent.resolve() / 'batch_1'  # in case of cluster
+        data_path = Path(__file__).parent.resolve() / 'batch_2'  # in case of cluster
         print(f"data_path = {data_path}")
 
     signal_to_noise_ratio_db = 40

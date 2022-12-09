@@ -109,8 +109,8 @@ def run_parallel_sims():
         'run_automated_simulations_cluster.py',
         'run_parallel_on_cluster.pbs',
         'run_simulation.py',
+        'slack_url.py',
         'utils.py',
-        'slack_url.py'
     ]
 
     assert all([True if Path.is_file(Path.cwd() / file) else False for file in copy_files]), (
