@@ -1073,7 +1073,7 @@ def load_2dfft_processed_data(fn, data_path):
     try:
         json_info_file, _ = get_newest_file_name(data_path, extension='.json')
         assert fn[0:fn.find('_disp')] + '_info' == json_info_file[0:-5], \
-            'JSON info file and data do not match!'
+            f'JSON info file and data do not match! Filename is:\n{fn}\nand JSON info file is\n{json_info_file}'
         with open(data_path / json_info_file) as info_file:
             sim_info = json.load(info_file)
     except NameError:

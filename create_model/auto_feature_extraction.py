@@ -167,7 +167,7 @@ if __name__ == '__main__':
         # path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
         path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
     else:
-        path = Path.cwd().resolve()
+        path = Path.cwd().resolve() / 'simulations'
 
     extract_and_move_features(analysis_path=path,
                               feature_name='_lin_n_40_k_15.')
