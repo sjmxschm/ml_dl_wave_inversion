@@ -1766,10 +1766,474 @@ def load_param_sets():
     #     ' -- ',
     # ]
 
+    # param_sets = [
+    #     # 400
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000400'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 410 - 5 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000410'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000410'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000410'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000410'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000410'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 420 - 10 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000420'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000420'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000420'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000420'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000420'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 430 - 15 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000430'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000430'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000430'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000430'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000430'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 440 - 20 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000440'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000440'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000440'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000440'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000440'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 450 - 25 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000450'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000450'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000450'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000450'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000450'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 460 - 30 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000460'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000460'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000460'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000460'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000460'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 470 - 35 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000470'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000470'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000470'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000470'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000470'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 480 - 40 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000480'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000480'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000480'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000480'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000480'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 490 - 45 sims until here
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000490'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000040'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000490'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000080'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000490'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000120'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000490'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000160'
+    #     ' -- ',
+    #     ' -- plate_width=0.08'
+    #     ' -- coating_height=0.000490'
+    #     ' -- base_plate_height=0.001'
+    #     ' -- t_sampling=0.00000002'
+    #     ' -- cg_top_left=0.001'
+    #     ' -- cg_top_right=0.001'
+    #     ' -- cg_bevel=0.004'
+    #     ' -- cg_gap_depth=0.000200'
+    #     ' -- ',
+    #     # 50 simulations until here
+    # ]
+
     param_sets = [
-        # 400
+        # 500
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
+        ' -- coating_height=0.000500'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1778,7 +2242,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
+        ' -- coating_height=0.000500'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1787,7 +2251,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
+        ' -- coating_height=0.000500'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1796,7 +2260,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
+        ' -- coating_height=0.000500'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1805,7 +2269,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000400'
+        ' -- coating_height=0.000500'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1813,9 +2277,55 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 410 - 5 sims until here
+        # 510 - 5 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000410'
+        ' -- coating_height=0.000510'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.004'
+        ' -- cg_gap_depth=0.000050'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000510'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.004'
+        ' -- cg_gap_depth=0.000080'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000510'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.004'
+        ' -- cg_gap_depth=0.000120'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000510'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.004'
+        ' -- cg_gap_depth=0.000160'
+        ' -- ',
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000510'
+        ' -- base_plate_height=0.001'
+        ' -- t_sampling=0.00000002'
+        ' -- cg_top_left=0.001'
+        ' -- cg_top_right=0.001'
+        ' -- cg_bevel=0.004'
+        ' -- cg_gap_depth=0.000200'
+        ' -- ',
+        # 520 - 10 sims until here
+        ' -- plate_width=0.08'
+        ' -- coating_height=0.000520'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1824,7 +2334,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000410'
+        ' -- coating_height=0.000520'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1833,7 +2343,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000410'
+        ' -- coating_height=0.000520'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1842,7 +2352,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000410'
+        ' -- coating_height=0.000520'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1851,7 +2361,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000410'
+        ' -- coating_height=0.000520'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1859,9 +2369,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 420 - 10 sims until here
+        # 530 - 15 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000420'
+        ' -- coating_height=0.000530'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1870,7 +2380,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000420'
+        ' -- coating_height=0.000530'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1879,7 +2389,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000420'
+        ' -- coating_height=0.000530'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1888,7 +2398,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000420'
+        ' -- coating_height=0.000530'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1897,7 +2407,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000420'
+        ' -- coating_height=0.000530'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1905,9 +2415,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 430 - 15 sims until here
+        # 540 - 20 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000430'
+        ' -- coating_height=0.000540'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1916,7 +2426,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000430'
+        ' -- coating_height=0.000540'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1925,7 +2435,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000430'
+        ' -- coating_height=0.000540'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1934,7 +2444,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000430'
+        ' -- coating_height=0.000540'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1943,7 +2453,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000430'
+        ' -- coating_height=0.000540'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1951,9 +2461,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 440 - 20 sims until here
+        # 550 - 25 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000440'
+        ' -- coating_height=0.000550'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1962,7 +2472,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000440'
+        ' -- coating_height=0.000550'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1971,7 +2481,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000440'
+        ' -- coating_height=0.000550'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1980,7 +2490,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000440'
+        ' -- coating_height=0.000550'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1989,7 +2499,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000440'
+        ' -- coating_height=0.000550'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -1997,9 +2507,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 450 - 25 sims until here
+        # 560 - 30 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000450'
+        ' -- coating_height=0.000560'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2008,7 +2518,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000450'
+        ' -- coating_height=0.000560'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2017,7 +2527,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000450'
+        ' -- coating_height=0.000560'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2026,7 +2536,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000450'
+        ' -- coating_height=0.000560'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2035,7 +2545,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000450'
+        ' -- coating_height=0.000560'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2043,9 +2553,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 460 - 30 sims until here
+        # 570 - 35 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000460'
+        ' -- coating_height=0.000570'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2054,7 +2564,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000460'
+        ' -- coating_height=0.000570'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2063,7 +2573,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000460'
+        ' -- coating_height=0.000570'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2072,7 +2582,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000460'
+        ' -- coating_height=0.000570'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2081,7 +2591,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000460'
+        ' -- coating_height=0.000570'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2089,9 +2599,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 470 - 35 sims until here
+        # 580 - 40 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000470'
+        ' -- coating_height=0.000580'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2100,7 +2610,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000470'
+        ' -- coating_height=0.000580'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2109,7 +2619,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000470'
+        ' -- coating_height=0.000580'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2118,7 +2628,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000470'
+        ' -- coating_height=0.000580'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2127,7 +2637,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000470'
+        ' -- coating_height=0.000580'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2135,9 +2645,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 480 - 40 sims until here
+        # 590 - 45 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000480'
+        ' -- coating_height=0.000590'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2146,7 +2656,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000480'
+        ' -- coating_height=0.000590'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2155,7 +2665,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000480'
+        ' -- coating_height=0.000590'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2164,7 +2674,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000480'
+        ' -- coating_height=0.000590'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2173,7 +2683,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000480'
+        ' -- coating_height=0.000590'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2181,9 +2691,9 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 490 - 45 sims until here
+        # 600 - 45 sims until here
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000490'
+        ' -- coating_height=0.000600'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2192,7 +2702,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000040'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000490'
+        ' -- coating_height=0.000600'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2201,7 +2711,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000080'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000490'
+        ' -- coating_height=0.000600'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2210,7 +2720,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000120'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000490'
+        ' -- coating_height=0.000600'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2219,7 +2729,7 @@ def load_param_sets():
         ' -- cg_gap_depth=0.000160'
         ' -- ',
         ' -- plate_width=0.08'
-        ' -- coating_height=0.000490'
+        ' -- coating_height=0.000600'
         ' -- base_plate_height=0.001'
         ' -- t_sampling=0.00000002'
         ' -- cg_top_left=0.001'
@@ -2227,7 +2737,7 @@ def load_param_sets():
         ' -- cg_bevel=0.004'
         ' -- cg_gap_depth=0.000200'
         ' -- ',
-        # 50 simulations until here
+        # 55 simulations until here
     ]
 
     return param_sets

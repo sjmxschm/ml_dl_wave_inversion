@@ -214,11 +214,17 @@ if __name__ == '__main__':
         # data_path = Path(__file__).parent.resolve() / 'batch_1'
         # data_path = Path(__file__).parent.resolve() / 'batch_2'
         # data_path = Path(__file__).parent.resolve() / 'batch_3'
-        data_path = Path(__file__).parent.resolve() / 'batch_4'
+        # data_path = Path(__file__).parent.resolve() / 'batch_4'
+        data_path = Path(__file__).parent.resolve() / 'batch_5'
         print(f"data_path = {data_path}")
 
+    # used first:
+    # signal_to_noise_ratio_db = 40
+    # kernel_size_nms = 15
+
+    # second try
     signal_to_noise_ratio_db = 40
-    kernel_size_nms = 15
+    kernel_size_nms = 61
 
     create_noisy_files(
         data_path,

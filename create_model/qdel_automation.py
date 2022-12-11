@@ -24,7 +24,7 @@ def delete_qjobs(job_min: int, job_max: int):
 
 if __name__ == '__main__':
     # specify job id on cluster
-    job_min = 5206512
-    job_max = 5206519
+    job_min = 5229285
+    job_max = 5229304
 
     delete_qjobs(job_min, job_max)
