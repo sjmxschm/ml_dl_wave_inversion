@@ -215,7 +215,8 @@ if __name__ == '__main__':
         # data_path = Path(__file__).parent.resolve() / 'batch_2'
         # data_path = Path(__file__).parent.resolve() / 'batch_3'
         # data_path = Path(__file__).parent.resolve() / 'batch_4'
-        data_path = Path(__file__).parent.resolve() / 'batch_5'
+        # data_path = Path(__file__).parent.resolve() / 'batch_5'
+        data_path = Path(__file__).parent.resolve() / 'batch_6'
         print(f"data_path = {data_path}")
 
     # used first:

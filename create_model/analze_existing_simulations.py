@@ -6,6 +6,14 @@ are running.
 
 This file needs to be put at user/scratch/ which is the same level as the 'simulations' folder.
 There is no extra scheduler script because this script will run on the end node. To run this file, write
+
+First, activate the right environment
+##########################################
+>>  module load anaconda3/2020.11
+>> conda activate wave_env_cl
+##########################################
+
+And then run the script
 ##########################################
 >> python3 analze_existing_simulations.py
 ##########################################
@@ -86,6 +94,7 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
 def visualize_feats(
         sim_df: pd.DataFrame,
         save: bool = False,
+        save_path: Path = Path.cwd(),
 ) -> None:
     """
     Plot the features from the simulation in an appealing way. Keep in mind
@@ -97,6 +106,7 @@ def visualize_feats(
         - sim_df: dataframe of features with dimension #sims x #5
         - gap_ratio: ratio (gap_depth/coating_thickness) in percent und which the specimen
             is considered as uniform
+        - save_path: Path to the directory where the features space visualization should be saved to
     """
 
     fig = plt.figure(1, dpi=200)
@@ -122,7 +132,7 @@ def visualize_feats(
     plt.xlabel(r'Coating thickness in $\mu$m (1E-6m)')
     plt.ylabel(r'Gap depth in $\mu$m (1E-6m)')
     if save:
-        plt.savefig(Path.cwd() / 'figures_param_space_py' /
+        plt.savefig(save_path / 'figures_param_space_py' /
                     f"{creation_date}_sim_params_space.png", dpi=200)
         # out_name = Path.cwd() / 'figures_param_space_py' / \
         #            f"{creation_date}_sim_params_space.pgf"
@@ -145,6 +155,6 @@ if __name__ == '__main__':
 
     param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)
 
-    visualize_feats(param_infos, save=save_visualization)
+    visualize_feats(param_infos, save=save_visualization, save_path=working_path)
 
     #print(param_infos)
