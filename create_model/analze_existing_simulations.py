@@ -51,7 +51,8 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
 
     """
 
-    folders = [elem for elem in os.listdir(path) if (elem.find('old') == -1 and elem.find('py') == -1)]
+    folders = [elem for elem in os.listdir(path) if (elem.find('old') == -1 and elem.find('py') == -1
+                                                     and elem.find('ext') == -1 and elem.find('.csv') == -1)]
 
     sim_infos = pd.DataFrame(columns=[
         'c_height', 'cg_top_left', 'cg_bevel', 'cg_top_right', 'cg_gap_depth'])
@@ -84,8 +85,8 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
     print(f"There are {len(sim_infos.index)} simulations which can be used")
 
     if save:
-        fn = get_creation_date() + 'param_infos.csv'
-        sim_infos.to_csv(fn, index=False)
+        fn_path = path / 'sim_infos_py' / Path(get_creation_date() + 'param_infos.csv')
+        sim_infos.to_csv(fn_path, index=False)
         print('>> Parameter Infos have been saved!')
 
     return sim_infos

@@ -129,12 +129,17 @@ def create_noisy_files(
         print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
 
         c_t = 0.0001
+        sup_thrshld = 1  # 2
+        print(f'##### The suppression threshold is {sup_thrshld} #####')
+        index_thrshld = 0.2  # 0.4
         abs_fft_data_n_c, x, y = non_maximum_suppression(
             abs_fft_data_n,
             data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
             sim_path=d_path / folder,
             clip_tr=c_t,
             kernel=kernel,
+            suppression_threshold=sup_thrshld,
+            idx_threshold=index_thrshld,
             save_flag=save_features,
             plot_flag=False
         )
@@ -206,9 +211,9 @@ def create_noisy_files(
 if __name__ == '__main__':
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     # # for cluster:
-    # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
+    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
 
-    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_duplicate'
+    # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_duplicate'
     if not data_path.is_dir():
         # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         # data_path = Path(__file__).parent.resolve() / 'batch_1'
@@ -220,19 +225,19 @@ if __name__ == '__main__':
         print(f"data_path = {data_path}")
 
     # used first:
-    # signal_to_noise_ratio_db = 40
-    # kernel_size_nms = 15
-
-    # second try
     signal_to_noise_ratio_db = 40
-    kernel_size_nms = 61
+    kernel_size_nms = 15
+
+    # second try (not applied yet):
+    # signal_to_noise_ratio_db = 40
+    # kernel_size_nms = 61
 
     create_noisy_files(
         data_path,
         snr=signal_to_noise_ratio_db,
         kernel=kernel_size_nms,
         save_features=True,
-        save_plot_normal=False,
-        save_cnn=True,
-        save_data=True
+        save_plot_normal=True,
+        save_cnn=False,
+        save_data=False
     )

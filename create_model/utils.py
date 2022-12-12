@@ -817,6 +817,8 @@ def non_maximum_suppression(
         data_file: str,
         sim_path: Union[str, pathlib.Path],
         kernel: int = 21,
+        suppression_threshold: float = 1,
+        idx_threshold: float = 0.2,
         gradient: list = None,
         x_lim: list = None,
         y_lim: list = None,
@@ -842,6 +844,14 @@ def non_maximum_suppression(
             - sim_path - path to simulation files
             - kernel=21 - size of kernel for max pooling, needs to be odd,
                 61 and 11 look good too
+            - suppression_threshold (float = 1) - suppression threshold is
+                multiplied with the median of the dispersion map data. Values
+                bigger than it will be considered for NMW, smaller ones will
+                be set to zero. suppression_threshold = 1 means that values
+                smaller than median will be discarded. Use a factor bigger
+                than 1 for noisy data
+            - idx_threshold (float = 0.2) - removes all indices with an
+                intensity below idx_threshold*np.mean(c) after nms
             - gradient = [gl, gu] (list): specify gradient boundaries (lower
                 and upper gradient) between which the NMS data should be.
                 Ignore data outside of it.
@@ -864,9 +874,13 @@ def non_maximum_suppression(
 
 
     # remove all entries smaller than median
-    fft_fltr = np.multiply(fft_data.copy(), fft_data > np.median(fft_data))
+    fft_fltr = np.multiply(fft_data.copy(), fft_data > suppression_threshold * np.median(fft_data))
+    print(f'the maximum value is {np.amax(fft_fltr)}')
+    print(f'the number of non-zero elements is {np.count_nonzero(fft_fltr)}, there are {fft_fltr.shape[0]*fft_fltr.shape[1]} elements total')
     fft_fltr = my_unsqueeze_2_torch(fft_fltr)
 
+    # import pdb
+    # pdb.set_trace()
     # print(fft_fltr.shape)
 
     mp = nn.MaxPool2d(kernel_size=kernel, stride=1, padding=int(kernel // 2))
@@ -882,16 +896,18 @@ def non_maximum_suppression(
     # -- get coordinates of maxima
     b = np.where(fft_p != 0)
 
-    # print(f"len(b[0]) = {len(b[0])}")
-    # print(f"b = {b}")
+    print(f"len(b[0]) = {len(b[0])}")
+    print(f"b = {b}")
 
     c = np.zeros((len(b[0])))  # intensity values at b locations
     # k = 26000 #250
-    for i, (x, y) in enumerate(zip(b[0], b[1])):
-        c[i] = fft_p[x, y]
+    # for i, (x, y) in enumerate(zip(b[0], b[1])):
+    #     c[i] = fft_p[x, y]
+
+    c = fft_p[b[0], b[1]]  # try it vectorized
     idx = np.argsort(c)
     # 0.2 looks like it gets the job done, but maybe needs to be tuned later on
-    idx_reduced = [i for i in idx if c[i] > 0.2*np.mean(c)]
+    idx_reduced = [i for i in idx if c[i] > idx_threshold*np.mean(c)]
 
     # import pdb; pdb.set_trace()
 
