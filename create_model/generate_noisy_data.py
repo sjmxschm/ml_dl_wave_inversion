@@ -61,7 +61,8 @@ def create_noisy_files(
         save_features: bool = False,
         save_plot_normal: bool = False,
         save_cnn: bool = False,
-        save_data: bool = False
+        save_data: bool = False,
+        check_for_existing_files: bool = True,
 ) -> None:
     """
     create_noisy_files loops over all folders in d_path and applies backwards/forward 2D-FFT, adds the noise,
@@ -74,9 +75,12 @@ def create_noisy_files(
     :param save_plot_normal: specifies if normal plot with title should be saved
     :param save_cnn: specifies if the CNN dispersion map image should be saved
     :param save_data: specifies if the noisy and newly created 2D-FFT data should be saved in folder
+    :param check_for_existing_files: specifies if script should look for existing 2D-FFT files. If true,
+        it will skip folders where noisy data is already existing
     :return:
     """
-    assert not save_plot_normal == save_cnn, "Only one save flag can be active at a time!! Neglect if both are False"
+    if save_plot_normal or save_cnn:
+        assert not save_plot_normal == save_cnn, "Only one save flag can be active at a time!! Neglect if both are False"
 
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)
                and not Path(d_path / elem).is_file() and elem.find('export') == -1]
@@ -99,17 +103,17 @@ def create_noisy_files(
             continue
         print(f'>> filename = {fn}')
 
-        # check if the noisy data for given snr and kernel are already existing
-        elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
-        skip_sim_folder = False
-        for elem in elems_in_folder:
-            if not elem.find(f'_{snr}_k_{kernel}_cnn.png') == -1:
-                skip_sim_folder = True
-                print(f'Noisy .png file {elem} exists already, move on!')
-                send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
-                break
-        if skip_sim_folder:
-            continue
+        if check_for_existing_files:
+            elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
+            skip_sim_folder = False
+            for elem in elems_in_folder:
+                if not elem.find(f'_{snr}_k_{kernel}_cnn.png') == -1:
+                    skip_sim_folder = True
+                    print(f'Noisy .png file {elem} exists already, move on!')
+                    send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
+                    break
+            if skip_sim_folder:
+                continue
 
         # check if the noisy data for given snr and kernel are already existing
         # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
@@ -130,8 +134,7 @@ def create_noisy_files(
 
         c_t = 0.0001
         sup_thrshld = 1  # 2
-        print(f'##### The suppression threshold is {sup_thrshld} #####')
-        index_thrshld = 0.2  # 0.4
+        index_thrshld = 1.5  # 0.4
         abs_fft_data_n_c, x, y = non_maximum_suppression(
             abs_fft_data_n,
             data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
@@ -205,15 +208,14 @@ def create_noisy_files(
             )
             print(">>> New, noisy 2D-FFT data was successfully saved!")
         print(">>>> Pipeline for current simulation finished\n_________________")
-        send_slack_message(f'\n## Noise Generation has finished in folder: {folder}')
+    send_slack_message(f'\n## Noise Generation has finished!')
 
 
 if __name__ == '__main__':
+    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
-    # # for cluster:
-    data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
-
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_duplicate'
+
     if not data_path.is_dir():
         # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         # data_path = Path(__file__).parent.resolve() / 'batch_1'
@@ -237,7 +239,8 @@ if __name__ == '__main__':
         snr=signal_to_noise_ratio_db,
         kernel=kernel_size_nms,
         save_features=True,
-        save_plot_normal=True,
+        save_plot_normal=False,
         save_cnn=False,
-        save_data=False
+        save_data=False,
+        check_for_existing_files=False
     )

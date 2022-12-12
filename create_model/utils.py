@@ -3,6 +3,7 @@ from os import listdir, path, remove
 from os.path import isfile, join
 from typing import Tuple, Union
 import time
+import re
 
 import numpy as np
 import matplotlib
@@ -851,7 +852,8 @@ def non_maximum_suppression(
                 smaller than median will be discarded. Use a factor bigger
                 than 1 for noisy data
             - idx_threshold (float = 0.2) - removes all indices with an
-                intensity below idx_threshold*np.mean(c) after nms
+                intensity below idx_threshold*np.mean(c) after nms.
+                1.5 looks promising for noisy data
             - gradient = [gl, gu] (list): specify gradient boundaries (lower
                 and upper gradient) between which the NMS data should be.
                 Ignore data outside of it.
@@ -909,6 +911,7 @@ def non_maximum_suppression(
     # 0.2 looks like it gets the job done, but maybe needs to be tuned later on
     idx_reduced = [i for i in idx if c[i] > idx_threshold*np.mean(c)]
 
+    print(f'len(idx_reduced) = {len(idx_reduced)}')
     # import pdb; pdb.set_trace()
 
     # -- define outputs - remember x and y are swapped for images in python
@@ -1096,15 +1099,19 @@ def load_2dfft_processed_data(fn, data_path):
         print('No .json info file with appropriate naming in directory!')
 
     # -- load 2DFFT data
+    fn = fn[0:43] + 'sp' + fn[45::]
+    with open(data_path / fn) as f:
+        abs_fft_data = np.genfromtxt(f, delimiter=',')
+    if re.search(pattern='_n_[0-9]+_k_[0-9]+.csv', string=fn) is not None:
+        filename = fn[0:52] + '.csv'
+        fn = filename[0:43] + 'fg' + filename[45::]
+
     fn = fn[0:43] + 'fg' + fn[45::]
     with open(data_path / fn) as f:
         fg = np.genfromtxt(f, delimiter=',')
     fn = fn[0:43] + 'kg' + fn[45::]
     with open(data_path / fn) as f:
         kg = np.genfromtxt(f, delimiter=',')
-    fn = fn[0:43] + 'sp' + fn[45::]
-    with open(data_path / fn) as f:
-        abs_fft_data = np.genfromtxt(f, delimiter=',')
 
     return fg, kg, abs_fft_data, sim_info
 
