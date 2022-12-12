@@ -1102,8 +1102,10 @@ def load_2dfft_processed_data(fn, data_path):
     fn = fn[0:43] + 'sp' + fn[45::]
     with open(data_path / fn) as f:
         abs_fft_data = np.genfromtxt(f, delimiter=',')
-    if re.search(pattern='_n_[0-9]+_k_[0-9]+.csv', string=fn) is not None:
-        filename = fn[0:52] + '.csv'
+
+    noisy_pattern = re.search(pattern='_n_[0-9]+_k_[0-9]+.csv', string=fn)
+    if noisy_pattern is not None:
+        filename = fn[0:noisy_pattern.span()[0]] + '.csv'
         fn = filename[0:43] + 'fg' + filename[45::]
 
     fn = fn[0:43] + 'fg' + fn[45::]
