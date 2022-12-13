@@ -119,9 +119,13 @@ def create_noisy_files(
         # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
         #     print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
         # else:
-
-        fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
-        print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+        try:
+            fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
+            print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+        except FileNotFoundError:
+            print(f'>>> There was a problem with the file {fn}\n'
+                  f'>>> in folder {folder}. Move on and ignore this one!')
+            continue
 
         displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
         print('>>> 2D-FFT data has been inverted to displacement-time data!')
@@ -217,13 +221,13 @@ if __name__ == '__main__':
     # data_path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_duplicate'
 
     if not data_path.is_dir():
-        # data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        data_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         # data_path = Path(__file__).parent.resolve() / 'batch_1'
         # data_path = Path(__file__).parent.resolve() / 'batch_2'
         # data_path = Path(__file__).parent.resolve() / 'batch_3'
         # data_path = Path(__file__).parent.resolve() / 'batch_4'
         # data_path = Path(__file__).parent.resolve() / 'batch_5'
-        data_path = Path(__file__).parent.resolve() / 'batch_6'
+        # data_path = Path(__file__).parent.resolve() / 'batch_6'
         print(f"data_path = {data_path}")
 
     # used first:
