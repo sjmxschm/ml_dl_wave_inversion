@@ -85,6 +85,9 @@ def create_noisy_files(
     folders = [elem for elem in os.listdir(d_path) if (elem.find('old') == -1 and elem.find('py') == -1)
                and not Path(d_path / elem).is_file() and elem.find('export') == -1]
 
+    c_t = 0.0001
+    sup_thrshld = 1  # 2
+    index_thrshld = 1.5  # 0.4
     incomplete_simulations = []
     for folder in tqdm(folders):
         print(f'\n> folder: {folder}')
@@ -107,7 +110,7 @@ def create_noisy_files(
             elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
             skip_sim_folder = False
             for elem in elems_in_folder:
-                if not elem.find(f'_{snr}_k_{kernel}_cnn.png') == -1:
+                if not elem.find(f'_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt') == -1:
                     skip_sim_folder = True
                     print(f'Noisy .png file {elem} exists already, move on!')
                     send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
@@ -136,9 +139,10 @@ def create_noisy_files(
         fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
         print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
 
-        c_t = 0.0001
-        sup_thrshld = 1  # 2
-        index_thrshld = 1.5  # 0.4
+        # move them to the top
+        # c_t = 0.0001
+        # sup_thrshld = 1  # 2
+        # index_thrshld = 1.5  # 0.4
         abs_fft_data_n_c, x, y = non_maximum_suppression(
             abs_fft_data_n,
             data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
@@ -153,7 +157,9 @@ def create_noisy_files(
         print(">>> Non-maximum-suppression has finished!")
 
         feat_lin = extract_features(lin_func, x, y, fg, kg)
-        feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+        # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+        feat_file_name = data_file[0:data_file.find('disp')] +\
+                         f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
         if save_features:
             with open(d_path / folder / feat_file_name, 'w') as f:
                 np.savetxt(f, feat_lin, delimiter=',')
@@ -228,6 +234,7 @@ if __name__ == '__main__':
         # data_path = Path(__file__).parent.resolve() / 'batch_4'
         # data_path = Path(__file__).parent.resolve() / 'batch_5'
         # data_path = Path(__file__).parent.resolve() / 'batch_6'
+        # data_path = Path(__file__).parent.resolve() / 'batch_7'
         print(f"data_path = {data_path}")
 
     # used first:
@@ -246,5 +253,5 @@ if __name__ == '__main__':
         save_plot_normal=False,
         save_cnn=False,
         save_data=False,
-        check_for_existing_files=False
+        check_for_existing_files=True
     )
