@@ -1,8 +1,8 @@
 """
-This file is intend to go into the analysis_2dfft folder, then look
+This file is intend to go into folder above the analysis_2dfft simulations, then look
 into every folder with the right naming (CrZy4 folders) and then first
 check if .png image for neural net (no legend, title, ...) already exists,
-in this case copy it to analysis_2dfft folder. Otherwise, create neural
+in this case copy it to CNN extraction folder. Otherwise, create neural
 net .png file first and copy it then.
 
 """
@@ -444,19 +444,19 @@ def obtain_train_test_split(path: Path, test_size: float = 0.3, clf_folder: str 
 
 
 if __name__ == '__main__':
-    cluster = True
-    # cluster = False
-
     random_suppression = False
 
     extract = True
 
-    if not cluster:
-        # path = Path.cwd().parent.resolve() / 'analysis_2dfft'
-        path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
-    else:
-        path = Path.cwd().resolve()
-    print(path)
+    # define local path
+    path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
+    cluster = True
+
+    if not path.is_dir():
+        path = Path.cwd().resolve() / 'simulations'
+        cluster = False
+
+    print(f"path = {path}")
 
     if extract:
         # # thickness classification
