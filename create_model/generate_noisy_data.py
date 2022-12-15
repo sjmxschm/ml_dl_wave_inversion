@@ -54,6 +54,172 @@ from utils import (
 )
 
 
+def create_noisy_files_in_folder(
+        d_path: Path(),
+        folder: str,
+        incomplete_simulations: list,
+        check_for_existing_files: bool = True,
+        snr: int = 40,
+        kernel: int = 15,
+        index_thrshld: float = 1.5,
+        sup_thrshld: int = 1,
+        c_t: float = 0.0001,
+        save_features: bool = True,
+        save_cnn: bool = False,
+        save_plot_normal: bool = False,
+        save_data: bool = False
+) -> bool:
+    """
+    function is doing the complete noisy data creation pipeline inside a single folder
+
+    Because of the fast approaching deadline write this documentation later :(
+    TODO: write this function description!!
+
+    :param d_path:
+    :param folder:
+    :param incomplete_simulations:
+    :param check_for_existing_files:
+    :param snr:
+    :param kernel:
+    :param index_thrshld:
+    :param sup_thrshld:
+    :param c_t:
+    :param save_features:
+    :param save_cnn:
+    :param save_plot_normal:
+    :param save_data:
+    :return:
+    """
+    print(f'\n> folder: {folder}')
+    send_slack_message(f'\n## Noise Generation has started in folder: {folder}')
+
+    fn, is_transformed = get_newest_file_name(
+        d_path / folder,
+        job_name='max_analysis_job',
+        extension='.csv'
+    )
+    try:
+        data_file = fn[0:37]
+    except TypeError:
+        incomplete_simulations.append(folder)
+        print(f'########> No corresponding displacement .csv files found in folder {folder}!!!')
+        return True
+    print(f'>> filename = {fn}')
+
+    if check_for_existing_files:
+        elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
+        skip_sim_folder = False
+        for elem in elems_in_folder:
+            if not elem.find(f'_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt') == -1:
+                skip_sim_folder = True
+                print(f'Noisy .png file {elem} exists already, move on!')
+                send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
+                break
+        if skip_sim_folder:
+            return True
+
+    # check if the noisy data for given snr and kernel are already existing
+    # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
+    #     print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
+    # else:
+    try:
+        fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
+        print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+    except FileNotFoundError:
+        print(f'>>> There was a problem with the file {fn}\n'
+              f'>>> in folder {folder}. Move on and ignore this one!')
+        return True
+
+    displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
+    print('>>> 2D-FFT data has been inverted to displacement-time data!')
+
+    displacement_x_time_n = add_noise(displacement_x_time, snr_db=snr)
+    print(f'>>> noise with SNR = {snr} was added to displacement data!')
+
+    fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
+    print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
+
+    # move them to the top
+    # c_t = 0.0001
+    # sup_thrshld = 1  # 2
+    # index_thrshld = 1.5  # 0.4
+    abs_fft_data_n_c, x, y = non_maximum_suppression(
+        abs_fft_data_n,
+        data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
+        sim_path=d_path / folder,
+        clip_tr=c_t,
+        kernel=kernel,
+        suppression_threshold=sup_thrshld,
+        idx_threshold=index_thrshld,
+        save_flag=save_features,
+        plot_flag=False
+    )
+    print(">>> Non-maximum-suppression has finished!")
+
+    feat_lin = extract_features(lin_func, x, y, fg, kg)
+    # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+    feat_file_name = data_file[0:data_file.find('disp')] + \
+                     f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
+    if save_features:
+        with open(d_path / folder / feat_file_name, 'w') as f:
+            np.savetxt(f, feat_lin, delimiter=',')
+    print(">>> Feature-extraction finished!")
+
+    plt_type = 'contf'
+    plt_res = 300
+    output_file = get_output_name(
+        d_path / folder,
+        sim_info['job_name'],
+        sim_info['c_height'],
+        plt_type, plt_res, save_cnn,
+        snr=snr, kernel=kernel
+    )
+    if save_cnn or save_plot_normal:
+        plot_sim_and_analy_data(
+            fg,
+            kg,
+            abs_fft_data_n_c,
+            sim_info=sim_info,
+            output_file=output_file,
+            x=x,
+            y=y,
+            plt_type=plt_type,
+            plt_res=plt_res,
+            ka_cr=None,
+            fa_cr=None,
+            mn_cr=None,
+            ka_zy4cr=None,
+            fa_zy4cr=None,
+            mn_zy4cr=None,
+            ka_zy=None,
+            fa_zy=None,
+            mn_zy=None,
+            axis=False,
+            m_axis=[0, 8000, 0, 2.5E7],
+            clip_threshold=c_t,
+            add_analytical=False,
+            add_fit=True,
+            add_scatter=True,
+            save_CNN=save_cnn,
+            save_flag=save_plot_normal,
+            show_plot=False,
+        )
+        print(">>> Plotting and saving of CNN data finished!")
+
+    if save_data:
+        store_fft_data(
+            fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
+            d_path / folder,
+            abs_fft_data_n_c,
+            fg_n,
+            kg_n,
+            sim_info,
+            snr=snr
+        )
+        print(">>> New, noisy 2D-FFT data was successfully saved!")
+    print(">>>> Pipeline for current simulation finished\n_________________")
+    return False
+
 def create_noisy_files(
         d_path: Path,
         snr: int = 40,
@@ -90,134 +256,152 @@ def create_noisy_files(
     index_thrshld = 1.5  # 0.4
     incomplete_simulations = []
     for folder in tqdm(folders):
-        print(f'\n> folder: {folder}')
-        send_slack_message(f'\n## Noise Generation has started in folder: {folder}')
-
-        fn, is_transformed = get_newest_file_name(
-            d_path / folder,
-            job_name='max_analysis_job',
-            extension='.csv'
+        continue_loop = create_noisy_files_in_folder(
+            d_path,
+            folder,
+            incomplete_simulations,
+            check_for_existing_files,
+            snr,
+            kernel,
+            index_thrshld,
+            sup_thrshld,
+            c_t,
+            save_features,
+            save_cnn,
+            save_plot_normal,
+            save_data,
         )
-        try:
-            data_file = fn[0:37]
-        except TypeError:
-            incomplete_simulations.append(folder)
-            print(f'########> No corresponding displacement .csv files found in folder {folder}!!!')
+        if continue_loop:
             continue
-        print(f'>> filename = {fn}')
-
-        if check_for_existing_files:
-            elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
-            skip_sim_folder = False
-            for elem in elems_in_folder:
-                if not elem.find(f'_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt') == -1:
-                    skip_sim_folder = True
-                    print(f'Noisy .png file {elem} exists already, move on!')
-                    send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
-                    break
-            if skip_sim_folder:
-                continue
-
-        # check if the noisy data for given snr and kernel are already existing
-        # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
-        #     print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
-        # else:
-        try:
-            fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
-            print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
-        except FileNotFoundError:
-            print(f'>>> There was a problem with the file {fn}\n'
-                  f'>>> in folder {folder}. Move on and ignore this one!')
-            continue
-
-        displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
-        print('>>> 2D-FFT data has been inverted to displacement-time data!')
-
-        displacement_x_time_n = add_noise(displacement_x_time, snr_db=snr)
-        print(f'>>> noise with SNR = {snr} was added to displacement data!')
-
-        fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
-        print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
-
-        # move them to the top
-        # c_t = 0.0001
-        # sup_thrshld = 1  # 2
-        # index_thrshld = 1.5  # 0.4
-        abs_fft_data_n_c, x, y = non_maximum_suppression(
-            abs_fft_data_n,
-            data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
-            sim_path=d_path / folder,
-            clip_tr=c_t,
-            kernel=kernel,
-            suppression_threshold=sup_thrshld,
-            idx_threshold=index_thrshld,
-            save_flag=save_features,
-            plot_flag=False
-        )
-        print(">>> Non-maximum-suppression has finished!")
-
-        feat_lin = extract_features(lin_func, x, y, fg, kg)
-        # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
-        feat_file_name = data_file[0:data_file.find('disp')] +\
-                         f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
-        if save_features:
-            with open(d_path / folder / feat_file_name, 'w') as f:
-                np.savetxt(f, feat_lin, delimiter=',')
-        print(">>> Feature-extraction finished!")
-
-        plt_type = 'contf'
-        plt_res = 300
-        output_file = get_output_name(
-            d_path / folder,
-            sim_info['job_name'],
-            sim_info['c_height'],
-            plt_type, plt_res, save_cnn,
-            snr=snr, kernel=kernel
-        )
-        if save_cnn or save_plot_normal:
-            plot_sim_and_analy_data(
-                fg,
-                kg,
-                abs_fft_data_n_c,
-                sim_info=sim_info,
-                output_file=output_file,
-                x=x,
-                y=y,
-                plt_type=plt_type,
-                plt_res=plt_res,
-                ka_cr=None,
-                fa_cr=None,
-                mn_cr=None,
-                ka_zy4cr=None,
-                fa_zy4cr=None,
-                mn_zy4cr=None,
-                ka_zy=None,
-                fa_zy=None,
-                mn_zy=None,
-                axis=False,
-                m_axis=[0, 8000, 0, 2.5E7],
-                clip_threshold=c_t,
-                add_analytical=False,
-                add_fit=True,
-                add_scatter=True,
-                save_CNN=save_cnn,
-                save_flag=save_plot_normal,
-                show_plot=False,
-            )
-            print(">>> Plotting and saving of CNN data finished!")
-
-        if save_data:
-            store_fft_data(
-                fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
-                d_path / folder,
-                abs_fft_data_n_c,
-                fg_n,
-                kg_n,
-                sim_info,
-                snr=snr
-            )
-            print(">>> New, noisy 2D-FFT data was successfully saved!")
-        print(">>>> Pipeline for current simulation finished\n_________________")
+        # print(f'\n> folder: {folder}')
+        # send_slack_message(f'\n## Noise Generation has started in folder: {folder}')
+        #
+        # fn, is_transformed = get_newest_file_name(
+        #     d_path / folder,
+        #     job_name='max_analysis_job',
+        #     extension='.csv'
+        # )
+        # try:
+        #     data_file = fn[0:37]
+        # except TypeError:
+        #     incomplete_simulations.append(folder)
+        #     print(f'########> No corresponding displacement .csv files found in folder {folder}!!!')
+        #     continue
+        # print(f'>> filename = {fn}')
+        #
+        # if check_for_existing_files:
+        #     elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
+        #     skip_sim_folder = False
+        #     for elem in elems_in_folder:
+        #         if not elem.find(f'_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt') == -1:
+        #             skip_sim_folder = True
+        #             print(f'Noisy .png file {elem} exists already, move on!')
+        #             send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
+        #             break
+        #     if skip_sim_folder:
+        #         continue
+        #
+        # # check if the noisy data for given snr and kernel are already existing
+        # # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
+        # #     print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
+        # # else:
+        # try:
+        #     fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
+        #     print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
+        # except FileNotFoundError:
+        #     print(f'>>> There was a problem with the file {fn}\n'
+        #           f'>>> in folder {folder}. Move on and ignore this one!')
+        #     continue
+        #
+        # displacement_x_time, dt, dx, Nt, Nx = invert_2dfft(fg, kg, abs_fft_data, sim_info)
+        # print('>>> 2D-FFT data has been inverted to displacement-time data!')
+        #
+        # displacement_x_time_n = add_noise(displacement_x_time, snr_db=snr)
+        # print(f'>>> noise with SNR = {snr} was added to displacement data!')
+        #
+        # fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
+        # print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
+        #
+        # # move them to the top
+        # # c_t = 0.0001
+        # # sup_thrshld = 1  # 2
+        # # index_thrshld = 1.5  # 0.4
+        # abs_fft_data_n_c, x, y = non_maximum_suppression(
+        #     abs_fft_data_n,
+        #     data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
+        #     sim_path=d_path / folder,
+        #     clip_tr=c_t,
+        #     kernel=kernel,
+        #     suppression_threshold=sup_thrshld,
+        #     idx_threshold=index_thrshld,
+        #     save_flag=save_features,
+        #     plot_flag=False
+        # )
+        # print(">>> Non-maximum-suppression has finished!")
+        #
+        # feat_lin = extract_features(lin_func, x, y, fg, kg)
+        # # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+        # feat_file_name = data_file[0:data_file.find('disp')] +\
+        #                  f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
+        # if save_features:
+        #     with open(d_path / folder / feat_file_name, 'w') as f:
+        #         np.savetxt(f, feat_lin, delimiter=',')
+        # print(">>> Feature-extraction finished!")
+        #
+        # plt_type = 'contf'
+        # plt_res = 300
+        # output_file = get_output_name(
+        #     d_path / folder,
+        #     sim_info['job_name'],
+        #     sim_info['c_height'],
+        #     plt_type, plt_res, save_cnn,
+        #     snr=snr, kernel=kernel
+        # )
+        # if save_cnn or save_plot_normal:
+        #     plot_sim_and_analy_data(
+        #         fg,
+        #         kg,
+        #         abs_fft_data_n_c,
+        #         sim_info=sim_info,
+        #         output_file=output_file,
+        #         x=x,
+        #         y=y,
+        #         plt_type=plt_type,
+        #         plt_res=plt_res,
+        #         ka_cr=None,
+        #         fa_cr=None,
+        #         mn_cr=None,
+        #         ka_zy4cr=None,
+        #         fa_zy4cr=None,
+        #         mn_zy4cr=None,
+        #         ka_zy=None,
+        #         fa_zy=None,
+        #         mn_zy=None,
+        #         axis=False,
+        #         m_axis=[0, 8000, 0, 2.5E7],
+        #         clip_threshold=c_t,
+        #         add_analytical=False,
+        #         add_fit=True,
+        #         add_scatter=True,
+        #         save_CNN=save_cnn,
+        #         save_flag=save_plot_normal,
+        #         show_plot=False,
+        #     )
+        #     print(">>> Plotting and saving of CNN data finished!")
+        #
+        # if save_data:
+        #     store_fft_data(
+        #         fn[0:-4] + f'_n_{snr}_k_{kernel}.csv',
+        #         d_path / folder,
+        #         abs_fft_data_n_c,
+        #         fg_n,
+        #         kg_n,
+        #         sim_info,
+        #         snr=snr
+        #     )
+        #     print(">>> New, noisy 2D-FFT data was successfully saved!")
+        # print(">>>> Pipeline for current simulation finished\n_________________")
+    print(f'')
     send_slack_message(f'\n## Noise Generation has finished!')
 
 
@@ -235,6 +419,7 @@ if __name__ == '__main__':
         # data_path = Path(__file__).parent.resolve() / 'batch_5'
         # data_path = Path(__file__).parent.resolve() / 'batch_6'
         # data_path = Path(__file__).parent.resolve() / 'batch_7'
+        # data_path = Path(__file__).parent.resolve() / 'batch_8'
         print(f"data_path = {data_path}")
 
     # used first:

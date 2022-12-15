@@ -29,6 +29,8 @@ except ModuleNotFoundError:
     from postprocess_2dfft_max_v15 import postprocessing_2dfft
     from auto_image_extraction import load_json_info_file
 
+from generate_noisy_data import create_noisy_files_in_folder
+
 
 def copy2folder(file, destination_dir) -> None:
     """
@@ -97,11 +99,13 @@ def extract_and_move_features(
     copied_folders = []
     error_files = []
     for folder in tqdm(folders):
-        # print(f'folder = {folder}')
+        print(f'#### folder = {folder}')
         if folder.find('old') == -1:
             exists = False
 
             for file in os.listdir(analysis_path / folder):
+                # print(f'########### file: {file}')
+                # print(f'############# file.find(ffeatures(feature_name)): {file.find(f"features{feature_name}")}')
                 if file.find(f'features{feature_name}') != -1:
                     save_file = file
                     my_file = analysis_path / output_folder / file
@@ -124,21 +128,48 @@ def extract_and_move_features(
                 print(f'Extraction takes place in folder = {folder}')
 
                 try:
-                    postprocessing_2dfft(
-                        analysis_path / folder,
-                        plot=False,
-                        show=False,
-                        save=True,
-                        add_analytical=False,
-                        add_scatter=False,
-                        add_fit=False,
-                        fitting_style='lin_local',
-                        clip_threshold=0.0001,  # 0.01,  # 0.001,
-                        m_axis=[0, 17500, 0, 2.5E7],
-                        plt_res=300,
-                        plt_type='contf',
-                        save_cnn_flag=False,
-                        cluster=False,
+                    # postprocessing_2dfft(
+                    #     analysis_path / folder,
+                    #     plot=False,
+                    #     show=False,
+                    #     save=True,
+                    #     add_analytical=False,
+                    #     add_scatter=False,
+                    #     add_fit=False,
+                    #     fitting_style='lin_local',
+                    #     clip_threshold=0.0001,  # 0.01,  # 0.001,
+                    #     m_axis=[0, 17500, 0, 2.5E7],
+                    #     plt_res=300,
+                    #     plt_type='contf',
+                    #     save_cnn_flag=False,
+                    #     cluster=False,
+                    # )
+
+                    # create_noisy_files_in_folder(
+                    #     d_path=analysis_path / folder,
+                    #     snr=40,
+                    #     kernel=15,
+                    #     save_features=True,
+                    #     save_plot_normal=False,
+                    #     save_cnn=False,
+                    #     save_data=False,
+                    #     check_for_existing_files=True
+                    # )
+
+                    create_noisy_files_in_folder(
+                        analysis_path,
+                        folder,
+                        incomplete_simulations=[],
+                        check_for_existing_files=True,
+                        snr=40,
+                        kernel=15,
+                        index_thrshld=1.5,
+                        sup_thrshld=1,
+                        c_t=0.0001,
+                        save_features=True,
+                        save_cnn=False,
+                        save_plot_normal=False,
+                        save_data=False,
                     )
                 except TypeError:
                     print(f'data not found for folder: {folder}')
@@ -161,12 +192,12 @@ def extract_and_move_features(
 
 
 if __name__ == '__main__':
-    cluster = True
+    cluster = False
 
     if not cluster:
         # path = Path.cwd().parent.resolve() / 'analysis_2dfft'
         # path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
-        path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
+        path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example_single'
     else:
         path = Path.cwd().resolve() / 'simulations'
 
