@@ -192,7 +192,7 @@ def extract_and_move_features(
 
 
 if __name__ == '__main__':
-    cluster = False
+    cluster = True
 
     if not cluster:
         # path = Path.cwd().parent.resolve() / 'analysis_2dfft'
