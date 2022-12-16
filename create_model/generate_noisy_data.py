@@ -38,6 +38,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
 
+from typing import Union
+
 from utils import (
     get_newest_file_name,
     load_2dfft_processed_data,
@@ -58,12 +60,13 @@ def create_noisy_files_in_folder(
         d_path: Path(),
         folder: str,
         incomplete_simulations: list,
-        check_for_existing_files: bool = True,
+        check_for_existing_files: str = None,
         snr: int = 40,
         kernel: int = 15,
         index_thrshld: float = 1.5,
         sup_thrshld: int = 1,
         c_t: float = 0.0001,
+        ignore_nms: bool = False,
         save_features: bool = True,
         save_cnn: bool = False,
         save_plot_normal: bool = False,
@@ -72,18 +75,18 @@ def create_noisy_files_in_folder(
     """
     function is doing the complete noisy data creation pipeline inside a single folder
 
-    Because of the fast approaching deadline write this documentation later :(
-    TODO: write this function description!!
-
     :param d_path: path to the folder where all simulation folders are included
     :param folder: folder in which the noisy data should be generated
     :param incomplete_simulations: a list (created outside) of folders which had an error in noise generation
-    :param check_for_existing_files: flag if it should be checked if noisy files are already existing (like ~overwrite)
+    :param check_for_existing_files: tells if and which noisy files it should check if they are already
+        existing (like ~overwrite). Can be '.txt' to look for existing features or '.png' to look for png files
     :param snr: Signal-to-Noise ratio in dB
     :param kernel: kernel size for NMS (should not be even)
     :param index_thrshld: threshold for index slicing inside of NMS
     :param sup_thrshld: threshold for suppression inside of NMS
     :param c_t: clipping threshold for NMS
+    :param ignore_nms: flag if the NMS and feature extraction should be excluded (makes sense if only CNN images
+        should be created)
     :param save_features: flag if features from linear fit should be saved
     :param save_cnn: flag if image for CNN should be saved
     :param save_plot_normal: flag if a normal plot with title should be created (most often not on cluster)
@@ -106,22 +109,20 @@ def create_noisy_files_in_folder(
         return True
     print(f'>> filename = {fn}')
 
-    if check_for_existing_files:
-        elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
-        skip_sim_folder = False
+    elems_in_folder = [elem for elem in os.listdir(d_path / folder)]
+    skip_sim_folder = False
+    if check_for_existing_files is not None:
         for elem in elems_in_folder:
-            if not elem.find(f'_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt') == -1:
+            if not elem.find(f'n_{snr}_k_{kernel}_cnn{check_for_existing_files}') == -1:
                 skip_sim_folder = True
-                print(f'Noisy .png file {elem} exists already, move on!')
+                print(f'Noisy {check_for_existing_files} file {elem} exists already, move on!')
                 send_slack_message(f'\n>># Noisy files exist already in: {folder}\nMove to next folder!')
                 break
         if skip_sim_folder:
             return True
+    else:
+        print('>>> It was not checked for existing files')
 
-    # check if the noisy data for given snr and kernel are already existing
-    # if not fn[0:-4].find(f'_{snr}_k_{kernel}') == -1:
-    #     print(f'noisy data >{fn[0:-4]}n_{snr}_k_{kernel}.csv< is already existing, jumping to next')
-    # else:
     try:
         fg, kg, abs_fft_data, sim_info = load_2dfft_processed_data(fn, d_path / folder)
         print('\n>>> frequency-/wavenumber grid, 2D-FFT data, and simulation information file was loaded!')
@@ -139,31 +140,33 @@ def create_noisy_files_in_folder(
     fg_n, kg_n, abs_fft_data_n = reapply_2dfft(displacement_x_time_n, dt, dx, Nt, Nx)
     print('>>> noisy displacement data was transformed back to frequency-wavenumber domain!')
 
-    # move them to the top
-    # c_t = 0.0001
-    # sup_thrshld = 1  # 2
-    # index_thrshld = 1.5  # 0.4
-    abs_fft_data_n_c, x, y = non_maximum_suppression(
-        abs_fft_data_n,
-        data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
-        sim_path=d_path / folder,
-        clip_tr=c_t,
-        kernel=kernel,
-        suppression_threshold=sup_thrshld,
-        idx_threshold=index_thrshld,
-        save_flag=save_features,
-        plot_flag=False
-    )
-    print(">>> Non-maximum-suppression has finished!")
+    if ignore_nms:
+        abs_fft_data_n_c, x, y = non_maximum_suppression(
+            abs_fft_data_n,
+            data_file=f"{data_file}_n_{snr}_k_{kernel}_________",
+            sim_path=d_path / folder,
+            clip_tr=c_t,
+            kernel=kernel,
+            suppression_threshold=sup_thrshld,
+            idx_threshold=index_thrshld,
+            save_flag=save_features,
+            plot_flag=False
+        )
+        print(">>> Non-maximum-suppression has finished!")
 
-    feat_lin = extract_features(lin_func, x, y, fg, kg)
-    # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
-    feat_file_name = data_file[0:data_file.find('disp')] + \
-                     f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
-    if save_features:
-        with open(d_path / folder / feat_file_name, 'w') as f:
-            np.savetxt(f, feat_lin, delimiter=',')
-    print(">>> Feature-extraction finished!")
+        feat_lin = extract_features(lin_func, x, y, fg, kg)
+        # feat_file_name = data_file[0:data_file.find('disp')] + f'features_lin_n_{snr}_k_{kernel}.txt'
+        feat_file_name = data_file[0:data_file.find('disp')] + \
+                         f'features_lin_n_{snr}_k_{kernel}_it_{index_thrshld}_st_{sup_thrshld}.txt'
+        if save_features:
+            with open(d_path / folder / feat_file_name, 'w') as f:
+                np.savetxt(f, feat_lin, delimiter=',')
+        print(">>> Feature-extraction finished!")
+    else:
+        # -- clip values of 2dfft
+        fft_data = np.clip(abs_fft_data_n, 0, c_t)
+        abs_fft_data_n_c = np.multiply(fft_data.copy(), fft_data > np.median(fft_data))
+        x, y = None, None
 
     plt_type = 'contf'
     plt_res = 300
@@ -307,9 +310,9 @@ if __name__ == '__main__':
         data_path,
         snr=signal_to_noise_ratio_db,
         kernel=kernel_size_nms,
-        save_features=True,
+        save_features=False,
         save_plot_normal=False,
-        save_cnn=False,
+        save_cnn=True,
         save_data=False,
-        check_for_existing_files=True
+        check_for_existing_files='.png'
     )

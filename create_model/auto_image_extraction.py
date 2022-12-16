@@ -289,9 +289,13 @@ def extract_and_move_nn_image(
 ) -> list:
     """
     Function searches for neural net .png file within files in each folder
-    of analysis_2dfft. If this file (which contains the feature(s)) exists then
-    it is copied to old_temp, otherwise postprocessing_2dfft is
-    used to extract the features and it is copied then.
+    containing simulation files. If this .png file (which contains the feature(s))
+    exists then it is copied to old_temp.
+    Prior, postprocessing_2dfft was called if the corresponding .png file is not
+    existing inside to folder to used to extract the features and would be copied then.
+    TODO: Since there should be the right .png image file in each folder, track the folders
+        where the CNN .png file has not been found and output them to the user to manually
+        check what was going wrong in the respective folder.
 
     Additionally, this script allows to use a thickness threshold.
 
