@@ -58,6 +58,7 @@ def extract_sim_info_to_df(path: Path, save: bool = False) -> pd.DataFrame:
         'c_height', 'cg_top_left', 'cg_bevel', 'cg_top_right', 'cg_gap_depth'])
 
     for idx, folder in enumerate(tqdm(folders)):
+        # print(f'folder>> {folder}')
         sim_info = load_json_info_file(path / folder)
 
         c_height = sim_info['c_height']
