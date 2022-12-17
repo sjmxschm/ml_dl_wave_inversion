@@ -12,7 +12,7 @@ from os.path import isfile, join, splitext
 from pathlib import Path
 from shutil import copyfile
 from tqdm import tqdm
-from typing import Union
+from typing import Union, Tuple
 import json
 import numpy as np
 
@@ -191,12 +191,14 @@ def extract_folders_via_uniformness(
         a_path: Path,
         folders: list = None,
         gap_ratio: int = 5,
-        cutting_operator: str = 'leq',
+        cutting_operator: str = 'uniform',
         random_suppression: bool = False
-) -> list:
+) -> Tuple[list, np.ndarray]:
     """
-    Extracts all folders from folders which are uniform, i.e. for which ratio between
-    gap_depth and coating_thickness is smaller than gap_ratio
+    Extracts all folders from folders which are uniform or non-uniform (depending on cutting operator), i.e. for
+    which the gap depth is zero
+    - The old gap_ratio is deprecated, but still used as an argument for this function to make
+        it backwards compatible
 
     args:
         - a_path: path to analysis data
@@ -213,9 +215,6 @@ def extract_folders_via_uniformness(
     """
     new_folders = []
 
-    # num_feats = 3
-    # feats = np.zeros((len(folders), num_feats))
-    # idx = 0
     feats = []
 
     np.random.seed(2718)
@@ -231,21 +230,9 @@ def extract_folders_via_uniformness(
         except KeyError:
             gap_depth = 0.
 
-        # if folder.count('_') == 0:
-        #     assert len(folder) == 3
-        #     uniform = True
-        # elif folder.count('_') == 1:
-        #     assert len(folder) == 7
-        #     uniform = True
-        # else:
-        #     c_thick = int(folder[0:folder.find('_')])
-        #     gap_depth = int(folder[folder.rfind('_') + 1::])
-        #     # real_thick = c_thick - gap_depth
-
         # if round(100 * gap_depth/c_thick) <= gap_ratio:
         if gap_depth == 0:
             uniform = True
-            # print(f'uniform: c_thick = {c_thick} + gap_depth = {gap_depth}')
         else:
             uniform = False
 
@@ -256,23 +243,20 @@ def extract_folders_via_uniformness(
             new_folders.append(folder)
             store_features_in_ndarray(feats, sim_info)
 
-
         # if random_suppression and 200 <= c_thick * 1E6 <= 300:  # and rand_prob <= 0.5:
         # pdb.set_trace()
         # exclude_digits = ('15', '25', '50', '60', '70', '80', '90', '100', '110', '120', '130', '150')
         # if random_suppression and 200 <= c_thick * 1E6 <= 310 and str(gap_depth*1e6)[-2::]
         # in exclude_digits and not uniform: (rand_prob[idx] < 0.1)
+
         if random_suppression and (0.00019 < c_thick) and (c_thick < 0.000315) and (gap_depth != 0) \
                 and (cutting_operator == 'non-uniform') and (rand_prob[idx] < 0.7):
-            # pdb.set_trace()
             try:
                 print(f'pop at {c_thick * 1e6}')
                 new_folders.pop()
                 feats.pop()
             except IndexError:
-                # pdb.set_trace()
                 print(f'new_folders list was empty when you tried to remove last element with thickness {c_thick*1e6}')
-    # pdb.set_trace()
     return new_folders, np.asarray(feats)
 
 
@@ -338,6 +322,7 @@ def extract_and_move_nn_image(
 
     check_and_create_dirs(analysis_path, 'temp')
     check_and_create_dirs(analysis_path, 'test')
+    check_and_create_dirs(analysis_path, 'val')
     check_and_create_dirs(analysis_path, 'train')
 
     assert 'old_temp' in os.listdir(analysis_path), '!! old_temp folder is missing in directory!!'
@@ -352,20 +337,8 @@ def extract_and_move_nn_image(
     else:
         folders = [elem for elem in os.listdir(analysis_path) if elem.find('old') == -1]
 
-    # folders = ['270_1_2_1_095']
-
-    # folders = ['020_1_1_1_000',
-    #            '220_1_1_1_000',
-    #            '280_1_2_1_045',
-    #            '325_1_1_1_000',
-    #            '350_1_2_1_060']
-
-    # new_folders = extract_folders_via_thickness_threshold(folders, thick_threshold, cutting_operator)
-
     # extract uniform/non-uniform folders
     new_folders, new_feats = extract_folders_via_uniformness(analysis_path, folders, gap_ratio, cutting_operator, rs)
-    # import pdb
-    # pdb.set_trace()
     save = True
     if cluster:
         save = False
@@ -377,7 +350,6 @@ def extract_and_move_nn_image(
     for folder in tqdm(new_folders):
         exists = False
 
-
         for file in os.listdir(analysis_path / folder):
             if file.find('cnn') != -1:
                 if copy_files:
@@ -386,44 +358,48 @@ def extract_and_move_nn_image(
                 exists = True
 
         if not exists:
-            print('Postprocessing started in folder: ', folder)
-            # try:
-            if cluster:
-                postprocessing_2dfft(
-                    analysis_path / folder,
-                    plot=True,
-                    show=False,
-                    save=True,
-                    add_analytical=False,
-                    add_scatter=False,
-                    add_fit=False,
-                    fitting_style='lin',
-                    clip_threshold=0.0001,  # 0.01,  # 0.001,
-                    m_axis=[0, 8000, 0, 2.5E7],  # was [0, 17500, 0, 2.5E7], now [0, 8000, 0, 2.5E7] for cnn export
-                    plt_res=300,
-                    plt_type='contf',
-                    save_cnn_flag=True,
-                    cluster=cluster,
-                )
-            else:
-                process_errors.append(folder)
-            # except (MemoryError, TypeError, UnboundLocalError):
+            process_errors.append(folder)
+
+            # print('Postprocessing started in folder: ', folder)
+            # # try:
+            # if cluster:
+            #     postprocessing_2dfft(
+            #         analysis_path / folder,
+            #         plot=True,
+            #         show=False,
+            #         save=True,
+            #         add_analytical=False,
+            #         add_scatter=False,
+            #         add_fit=False,
+            #         fitting_style='lin',
+            #         clip_threshold=0.0001,  # 0.01,  # 0.001,
+            #         m_axis=[0, 8000, 0, 2.5E7],  # was [0, 17500, 0, 2.5E7], now [0, 8000, 0, 2.5E7] for cnn export
+            #         plt_res=300,
+            #         plt_type='contf',
+            #         save_cnn_flag=True,
+            #         cluster=cluster,
+            #     )
+            # else:
             #     process_errors.append(folder)
-            #     print(f'Simulation was not completed in {folder}, no file found for postprocessing.'
-            #           f'!!!!! or MemoryError in folder {folder}!!!!!')
+            # # except (MemoryError, TypeError, UnboundLocalError):
+            # #     process_errors.append(folder)
+            # #     print(f'Simulation was not completed in {folder}, no file found for postprocessing.'
+            # #           f'!!!!! or MemoryError in folder {folder}!!!!!')
 
     return process_errors
 
 
-def obtain_train_test_split(path: Path, test_size: float = 0.3, clf_folder: str = '1'):
+def obtain_train_test_split(path: Path, test_size: float = 0.3, val_and_test_size: float = 0.5, clf_folder: str = '1'):
     """
-    Take the data processed and split them randomly into a training and a test set.
+    Take the data processed and split them randomly into a training, validation and a test set.
     Then copy the data into the appropriate folder
 
     args:
         - path: Path-object to temp folder where extracted .png data is located
-        - test_size: float which specifies percentage of dataset which should
-            be used for testing
+        - val_and_test_size: float which specifies percentage of dataset which should
+            be used for validation and testing
+        - test_size: float which specifies percentage of validation and test size that should
+            be used for the test set
         - clf_folder: can be either '1' (thick enough/uniform) or '-1' (not thick enough/
             non-uniform)
     """
@@ -432,16 +408,22 @@ def obtain_train_test_split(path: Path, test_size: float = 0.3, clf_folder: str 
     files = [elem for elem in files if elem.find('.png') != -1]
 
     try:
-        f_train, f_test, *_ = train_test_split(files, test_size=test_size,
+        f_train, f_val_test, *_ = train_test_split(files, test_size=val_and_test_size,
                                                random_state=52)
+        f_val, f_test, *_ = train_test_split(f_val_test, test_size=test_size,
+                                                   random_state=55)
     except ValueError:
+        print('There is an error in the train val test split')
         f_train = files[0:int(len(files)/2)]
         f_test = files[int(len(files)/2)::]
 
-    print(f'size of train set = {len(f_train)}\nsize of test set = {len(f_test)}\n')
+    print(f'size of train set = {len(f_train)}\nsize of val set = {len(f_val)}\nsize of test set = {len(f_test)}\n')
     for file in f_train:
         copy2folder(path / clf_folder / file,
                     analysis_path / 'old_train' / clf_folder / file)
+    for file in f_val:
+        copy2folder(path / clf_folder / file,
+                    analysis_path / 'old_val' / clf_folder / file)
     for file in f_test:
         copy2folder(path / clf_folder / file,
                     analysis_path / 'old_test' / clf_folder / file)
@@ -449,12 +431,11 @@ def obtain_train_test_split(path: Path, test_size: float = 0.3, clf_folder: str 
 
 if __name__ == '__main__':
     random_suppression = False
-
     extract = True
+    cluster = True
 
     # define local path
     path = Path().resolve() / '2dfft_data_selected' / 'cluster_simulations_example'
-    cluster = True
 
     if not path.is_dir():
         path = Path.cwd().resolve() / 'simulations'
@@ -475,15 +456,16 @@ if __name__ == '__main__':
 
         for cut_op, label in zip(cut_ops, labels):
             print(f'--> cut_up = {cut_op}, label = {label} --')
-            pe = extract_and_move_nn_image(path, copy_files=False, gap_ratio=gap_ratio,
-                                           cutting_operator=cut_op, clf_folder=label, cluster=cluster,
-                                           rs=random_suppression)
-            print(f'process errors 1 are: {pe}')
+            # not needed to run this twice because the CNN images should exist already
+            # pe = extract_and_move_nn_image(path, copy_files=False, gap_ratio=gap_ratio,
+            #                                cutting_operator=cut_op, clf_folder=label, cluster=cluster,
+            #                                rs=random_suppression)
+            # print(f'process errors 1 are: {pe}')
 
             pe = extract_and_move_nn_image(path, copy_files=True, gap_ratio=gap_ratio,
                                            cutting_operator=cut_op, clf_folder=label, cluster=cluster,
                                            rs=random_suppression)
-            print(f'process errors 2 are: {pe}')
+            print(f'process errors 1 are: {pe}')
 
             obtain_train_test_split(path / 'old_temp', test_size=0.3, clf_folder=label)
 
