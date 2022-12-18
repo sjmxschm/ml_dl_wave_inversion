@@ -222,6 +222,7 @@ def extract_folders_via_uniformness(
     # rand_prob = np.ones(len(folders))  # remove random selection
 
     for idx, folder in enumerate(folders):
+        # print(f'a_path / folder = {a_path / folder}')
         sim_info = load_json_info_file(a_path / folder)
 
         c_thick = sim_info['c_height']
@@ -333,9 +334,18 @@ def extract_and_move_nn_image(
     assert cutting_operator in valid_c_operators, 'Please specify valid cutting_operator'
 
     if cluster:
-        folders = [elem for elem in os.listdir(analysis_path) if splitext(elem)[1] == '.']
+        # folders = [elem for elem in os.listdir(analysis_path) if splitext(elem)[1] == '.' and elem.find('old') == -1]
+        folders_first = [elem for elem in os.listdir(analysis_path) if splitext(elem)[1] == '.'
+                   and not Path(analysis_path / elem).is_file()]
+
+        folders = [elem for elem in folders_first if elem.find('old') == -1
+                    and elem.find('py') == -1 and not Path(analysis_path / elem).is_file()
+                    and elem.find('export') == -1]
     else:
         folders = [elem for elem in os.listdir(analysis_path) if elem.find('old') == -1]
+
+    # import pdb
+    # pdb.set_trace()
 
     # extract uniform/non-uniform folders
     new_folders, new_feats = extract_folders_via_uniformness(analysis_path, folders, gap_ratio, cutting_operator, rs)
@@ -351,11 +361,14 @@ def extract_and_move_nn_image(
         exists = False
 
         for file in os.listdir(analysis_path / folder):
-            if file.find('cnn') != -1:
+            if file.find('_n_40_k_15_cnn') != -1:
+                # make sure to copy only the most recent one - most recent one is not important because they should
+                # all be the same. It is easier to make sure that just one file is copied per folder
                 if copy_files:
                     copy2folder(analysis_path / folder / file,
                                 analysis_path / 'old_temp' / clf_folder / file)
                 exists = True
+                break
 
         if not exists:
             process_errors.append(folder)
@@ -409,13 +422,14 @@ def obtain_train_test_split(path: Path, test_size: float = 0.3, val_and_test_siz
 
     try:
         f_train, f_val_test, *_ = train_test_split(files, test_size=val_and_test_size,
-                                               random_state=52)
-        f_val, f_test, *_ = train_test_split(f_val_test, test_size=test_size,
-                                                   random_state=55)
+                                                random_state=52)
+        f_val, f_test, *_ = train_test_split(f_val_test, test_size=0.5,
+                                                random_state=55)
     except ValueError:
         print('There is an error in the train val test split')
-        f_train = files[0:int(len(files)/2)]
-        f_test = files[int(len(files)/2)::]
+        f_train = files[0:int(len(files) / 3)]
+        f_val = files[int(len(files) / 3):int(len(files) * 2 / 3)]
+        f_test = files[int(len(files) * 2 / 3)::]
 
     print(f'size of train set = {len(f_train)}\nsize of val set = {len(f_val)}\nsize of test set = {len(f_test)}\n')
     for file in f_train:
@@ -439,7 +453,7 @@ if __name__ == '__main__':
 
     if not path.is_dir():
         path = Path.cwd().resolve() / 'simulations'
-        cluster = False
+        cluster = True
 
     print(f"path = {path}")
 
@@ -465,7 +479,7 @@ if __name__ == '__main__':
             pe = extract_and_move_nn_image(path, copy_files=True, gap_ratio=gap_ratio,
                                            cutting_operator=cut_op, clf_folder=label, cluster=cluster,
                                            rs=random_suppression)
-            print(f'process errors 1 are: {pe}')
+            print(f'There are {len(pe)} processes errors!\n process errors 1 are: {pe}')
 
             obtain_train_test_split(path / 'old_temp', test_size=0.3, clf_folder=label)
 
