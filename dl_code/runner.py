@@ -143,16 +143,16 @@ class Trainer:
 
         self.model.train()
 
-    def save_model(self) -> None:
+    def save_model(self, epoch: int = 0) -> None:
         """
-        Saves the model state and optimizer state on the dict
+        Saves the model state and optimizer state on the dict for current epoch
         """
         torch.save(
             {
                 "model_state_dict": self.model.state_dict(),
                 "optimizer_state_dict": self.optimizer.state_dict(),
             },
-            os.path.join(self.model_dir, "checkpoint.pt"),
+            os.path.join(self.model_dir, f"checkpoint_{epoch}.pt"),
         )
 
     def run_training_loop(self, num_epochs: int) -> None:
@@ -168,7 +168,7 @@ class Trainer:
             self.validation_accuracy_history.append(val_acc)
 
             if epoch_idx % self.save_freq == 0:
-                self.save_model()
+                self.save_model(epoch=epoch_idx)
 
             print(
                 f"Epoch:{epoch_idx + 1}"
