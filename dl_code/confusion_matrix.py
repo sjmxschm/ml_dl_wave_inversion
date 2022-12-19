@@ -124,7 +124,8 @@ def generate_confusion_matrix(
 
 
 def plot_confusion_matrix(
-        confusion_matrix: np.ndarray, class_labels: Sequence[str], network_name: str = 'ResNet18', save_matrix: bool = False
+        confusion_matrix: np.ndarray, class_labels: Sequence[str],
+        network_name: str = 'ResNet18', save_matrix: bool = False
 ) -> None:
     """
     Plots the confusion matrix

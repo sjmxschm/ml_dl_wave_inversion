@@ -72,7 +72,7 @@ def train_model(
         is_cuda: bool = True
 ):
     if load_trained_model:
-        model_info = torch.load(save_path / 'trained_MyResNet18_final.pt')
+        model_info = torch.load(save_path / 'trained_SimpleNetBig_final.pt')
         model_state = copy.deepcopy(model_info['state_dict'])
         model.load_state_dict(model_state)
         model.eval()
@@ -80,7 +80,7 @@ def train_model(
     trainer = Trainer(data_dir=data_path,
                       model=model,
                       optimizer=optimizer,
-                      model_dir=os.path.join(model_path, 'resnet18'),
+                      model_dir=os.path.join(model_path, 'simple_net_big'),
                       train_data_transforms=get_all_transforms(inp_size, [dataset_mean], [dataset_std]),
                       val_data_transforms=get_fundamental_normalization_transforms(inp_size, [dataset_mean],
                                                                                    [dataset_std]),
@@ -138,8 +138,8 @@ def main():
         save_path=save_path,
         inp_size=inp_size,
         batch_size=32,  # 32,  #48,  # 32,  # 32
-        save_freq=5,
-        num_epochs=2,  # 250, 150, 200
+        save_freq=1,
+        num_epochs=100,  # 250, 150, 200
         dataset_mean=0.3150067262879628,
         dataset_std=0.1554323642999201,
         load_from_disk=False,
@@ -155,6 +155,8 @@ def main():
         trainer.train_accuracy_history,
         trainer.validation_accuracy_history,
     )
+
+    print('>> network training sufficiently completed!')
 
     plot_loss_accuracy_history(trainer, save_plot=True)
 
