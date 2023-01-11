@@ -19,13 +19,13 @@ from pathlib import Path
 import numpy as np
 import matplotlib
 # # comment this in if you want to export to latex
-matplotlib.use("pgf")
-matplotlib.rcParams.update({
-    "pgf.texsystem": "pdflatex",
-    'font.family': 'serif',
-    'text.usetex': True,
-    'pgf.rcfonts': False,
-})
+# matplotlib.use("pgf")
+# matplotlib.rcParams.update({
+#     "pgf.texsystem": "pdflatex",
+#     'font.family': 'serif',
+#     'text.usetex': True,
+#     'pgf.rcfonts': False,
+# })
 
 import matplotlib.pyplot as plt
 from typing import Tuple
@@ -92,8 +92,8 @@ def weight_func(elem_l, elem, elem_r, N):
 
 def main():
 
-    save_publication = True
-    date = '02042022' #'01132022'
+    save_publication = False
+    date = '12192022'  #'02042022' #'01132022'
 
     #f_dir = Path.cwd() / 'epoch train history cluster' / '11092021_training'
     # f_dir = Path.cwd() / 'epoch train history cluster' / '11192021_training'
@@ -102,7 +102,8 @@ def main():
     # f_dir = Path.cwd() / 'epoch train history cluster' / '18062021_training'
     # f_dir = Path.cwd() / 'epoch train history cluster' / '01072022_training'
     # f_dir = Path.cwd() / 'epoch train history cluster' / '01132022_training'
-    f_dir = Path.cwd() / 'epoch train history cluster' / f'{date}_training'
+    # f_dir = Path.cwd() / 'epoch train history cluster' / f'{date}_training'
+    f_dir = Path.cwd() / 'epoch_train_history_cluster' / f'{date}_training'
     f_name = 'train_network.out'
 
     train_loss, val_loss, train_acc, val_acc = load_training_history(f_dir / f_name)
@@ -139,8 +140,8 @@ def main():
         ax_r.set_ylabel("Accuracy")
         ax_r.set_xlabel("Epochs")
 
-        if False:
-            plt.savefig(f'{f_dir}_sim_history.png', dpi=200)
+        if True:
+            plt.savefig(f_dir / f'{date}_sim_history.png', dpi=200)
 
         plt.tight_layout()
         plt.show()

@@ -12,10 +12,16 @@ from torch.optim import Optimizer
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
-from dl_code.image_loader import ImageLoader
-from dl_code.dl_utils import compute_accuracy, compute_loss, compute_probabilities
-from dl_code.simple_net import SimpleNet
-from dl_code.my_resnet import MyResNet18, MyResNet34
+try:
+    from dl_code.image_loader import ImageLoader
+    from dl_code.dl_utils import compute_accuracy, compute_loss, compute_probabilities
+    from dl_code.simple_net import SimpleNet
+    from dl_code.my_resnet import MyResNet18, MyResNet34
+except ModuleNotFoundError:
+    from image_loader import ImageLoader
+    from dl_utils import compute_accuracy, compute_loss, compute_probabilities
+    from simple_net import SimpleNet
+    from my_resnet import MyResNet18, MyResNet34
 
 # from image_loader import ImageLoader
 # from dl_utils import compute_accuracy, compute_loss

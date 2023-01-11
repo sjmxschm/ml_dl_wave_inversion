@@ -137,9 +137,9 @@ def main():
         model_path=model_path,
         save_path=save_path,
         inp_size=inp_size,
-        batch_size=32,  # 32,  #48,  # 32,  # 32
-        save_freq=1,
-        num_epochs=100,  # 250, 150, 200
+        batch_size=25,  # 32,  #48,  # 32,  # 32
+        save_freq=5,
+        num_epochs=200,  # 250, 150, 200
         dataset_mean=0.3150067262879628,
         dataset_std=0.1554323642999201,
         load_from_disk=False,
