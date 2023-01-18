@@ -21,6 +21,7 @@ class ImageLoader(data.Dataset):
     train_folder = "train"
     test_folder = "test"
     test_hard_folder = "test_hard"
+    true_test_folder = "TRUE_test"
 
     def __init__(
         self,
@@ -47,6 +48,8 @@ class ImageLoader(data.Dataset):
             self.curr_folder = os.path.join(root_dir, self.test_folder)
         elif split == "test_hard":
             self.curr_folder = os.path.join(root_dir, self.test_hard_folder)
+        elif split == "TRUE_test":
+            self.curr_folder = os.path.join(root_dir, self.true_test_folder)
 
         self.class_dict = self.get_classes()
         self.dataset = self.load_imagepaths_with_labels(self.class_dict)

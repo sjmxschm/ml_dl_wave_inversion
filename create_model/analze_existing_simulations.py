@@ -26,6 +26,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+import matplotlib
+# # comment this in if you want to export to latex
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
+
 from pathlib import Path
 
 from visualize_dataset import load_json_info_file, get_creation_date
@@ -119,6 +129,16 @@ def visualize_feats(
     sim_markers = ["D" if elem == 0.0 else "o" for elem in sim_df['cg_gap_depth'].tolist()]
     sim_size = [6 if elem == 0.0 else 10 for elem in sim_df['cg_gap_depth'].tolist()]
 
+    uniform_sims = []
+    for thickness in sim_df['cg_gap_depth'].tolist():
+        if thickness == 0.0:
+            uniform_sims.append(thickness)
+    n_uniform_sims = len(uniform_sims)
+    n_non_uniform_sims = 1018 - n_uniform_sims
+
+    print(f'There are {n_uniform_sims} simulations with uniform coating and\n'
+          f'there are {n_non_uniform_sims} simulations with non-uniform coating')
+
     for idx in range(len(sim_color)):
         ax.scatter(sim_df['c_height'].iloc[idx] * 1E6, sim_df['cg_gap_depth'].iloc[idx] * 1E6, s=sim_size[idx],
                    c=sim_color[idx], marker=sim_markers[idx], alpha=0.8)
@@ -134,11 +154,13 @@ def visualize_feats(
     plt.xlabel(r'Coating thickness in $\mu$m (1E-6m)')
     plt.ylabel(r'Gap depth in $\mu$m (1E-6m)')
     if save:
-        plt.savefig(save_path / 'figures_param_space_py' /
-                    f"{creation_date}_sim_params_space.png", dpi=200)
-        # out_name = Path.cwd() / 'figures_param_space_py' / \
-        #            f"{creation_date}_sim_params_space.pgf"
-        # plt.savefig(out_name, backend='pgf', format='pgf', dpi=200)
+        try:
+            plt.savefig(save_path / 'figures_param_space_py' /
+                        f"{creation_date}_sim_params_space.png", dpi=200)
+        except FileNotFoundError:
+            plt.savefig(save_path / f"{creation_date}_sim_params_space.png", dpi=200)
+            out_name = Path.cwd() / f"{creation_date}_sim_params_space.pgf"
+            plt.savefig(out_name, backend='pgf', format='pgf', dpi=200)
     plt.show()
 
 
@@ -146,16 +168,28 @@ if __name__ == '__main__':
     save_param_infos = True
     save_visualization = True
 
+    # working_path = Path(
+    #     'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
+    #     'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
+    #     'cluster_simulations_example'
+    # )
     working_path = Path(
         'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
-        'A Journal Paper\\ml_dl_wave_inversion\\create_model\\2dfft_data_selected\\'
-        'cluster_simulations_example'
+        'A Journal Paper\\ml_dl_wave_inversion\\create_model\\figures_param_space\\'
     )
     if not working_path.is_dir():
         working_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
         print(f"working path = {working_path}")
 
-    param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)
+    # param_infos = extract_sim_info_to_df(working_path, save=save_param_infos)
+
+    # load the param infos from the .csv file
+    parameter_info_path = Path(
+        'C:\\Users\\Max\\OneDrive\\Documents\\Uni Gatech MSC\\A Lab Research Wave CEE\\'
+        'A Journal Paper\\ml_dl_wave_inversion\\create_model\\figures_param_space\\'
+        '01-18_09-53-37param_infos.csv'
+    )
+    param_infos = pd.read_csv(parameter_info_path)
 
     visualize_feats(param_infos, save=save_visualization, save_path=working_path)
 

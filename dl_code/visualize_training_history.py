@@ -19,13 +19,13 @@ from pathlib import Path
 import numpy as np
 import matplotlib
 # # comment this in if you want to export to latex
-# matplotlib.use("pgf")
-# matplotlib.rcParams.update({
-#     "pgf.texsystem": "pdflatex",
-#     'font.family': 'serif',
-#     'text.usetex': True,
-#     'pgf.rcfonts': False,
-# })
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 
 import matplotlib.pyplot as plt
 from typing import Tuple
@@ -92,8 +92,8 @@ def weight_func(elem_l, elem, elem_r, N):
 
 def main():
 
-    save_publication = False
-    date = '12192022'  #'02042022' #'01132022'
+    save_publication = True
+    date = '01122023'  # '12192022'  #'02042022' #'01132022'
 
     #f_dir = Path.cwd() / 'epoch train history cluster' / '11092021_training'
     # f_dir = Path.cwd() / 'epoch train history cluster' / '11192021_training'

@@ -51,7 +51,8 @@ def extract_sim_information_from_folders(path: Path) -> np.array:
 
     """
 
-    folders = [elem for elem in os.listdir(path) if elem.find('old') == -1]
+    folders = [elem for elem in os.listdir(path) if (elem.find('old') == -1 and elem.find('py') == -1
+                                                     and elem.find('ext') == -1 and elem.find('.csv') == -1)]
 
     num_feats = 3
     feats = np.zeros((len(folders), num_feats))
@@ -138,7 +139,7 @@ def visualize_features(
     plt.show()
 
 
-def get_thickness_info_gap(feats: np.array, thick_trshd: int = 204, save: bool = False) -> None:
+def get_thickness_info_gap(feats: np.array, thick_trshd: int = 200, save: bool = False) -> None:
     """
     Output various basic dataset statistics to terminal and text file
 
@@ -207,6 +208,7 @@ def get_thickness_info_gap(feats: np.array, thick_trshd: int = 204, save: bool =
         # # f'|--> {sir} (= {"{:.2f}".format(sir_rel)}%) sims in range\n'
         # # f'|--> {soor} (= {"{:.2f}".format(soor_rel)}%) sims out of range\n'
         f'|--> {s_total} (= 100%) sims total\n'
+        f'|--> thickness threshold: {thick_trshd} microns\n'
         f'.  .  .  .  .  .  .  .  .  .  .  .  .  .  .\n'
         f'|--> {te_tot} (= {"{:.2f}".format(te_tot_rel)}%) sims thick enough\n'
         f'|--> {nt_tot} (= {"{:.2f}".format(nt_tot_rel)}%) sims not thick enough \n'
@@ -283,10 +285,13 @@ def get_thickness_info_uniform(
 
 
 if __name__ == '__main__':
-    save = True
+    save = False
     gap_ratio = 5  # deprecated - only used for statistics
     thick_trshd = 200
     working_path = Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
+    if not working_path.is_dir():
+        working_path = Path(__file__).parent.resolve() / 'simulations'  # in case of cluster
+        print(f"working path = {working_path}")
 
     feats = extract_sim_information_from_folders(working_path)
 

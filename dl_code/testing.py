@@ -93,7 +93,8 @@ class Tester:
 
         if load_trained_model:
             if is_checkpoint:
-                checkpoint = torch.load(os.path.join(save_dir, "checkpoint.pt"))
+                # checkpoint = torch.load(os.path.join(save_dir, "checkpoint.pt"))
+                checkpoint = torch.load(os.path.join(save_dir, model_name))
                 self.model.load_state_dict(checkpoint["model_state_dict"])
             else:
                 model_info = torch.load(save_dir / model_name)
