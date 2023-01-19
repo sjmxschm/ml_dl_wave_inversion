@@ -88,7 +88,7 @@ def extract_and_move_features(
 
     # create export folder for features
     # output_folder = 'export_' + feature_name[1::].rstrip('.') + '_paper_review'  # # put name of output here!!!
-    output_folder = 'export_' + feature_name[1:-1] + '_paper_review'  # # put name of output here!!!
+    output_folder = 'export_' + feature_name[1:-1] + '_paper_review_3'  # # put name of output here!!!
     output_path = Path(analysis_path / output_folder)
     if not output_path.is_dir():
         output_path.mkdir(exist_ok=False)
