@@ -219,7 +219,8 @@ def postprocessing_2dfft(
         data_path = sim_path
     else:
         # data_path = pathlib.Path(__file__).parents[1].resolve() / 'analysis_2dfft'
-        data_path = pathlib.Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
+        #data_path = pathlib.Path('C:\\Users\\Max\\Documents') / 'analysis_2dfft'
+        data_path = pathlib.Path(r"C:\Users\Max\OneDrive\Documents\Uni Gatech MSC\A Lab Research Wave CEE\A Journal Paper\ml_dl_wave_inversion\create_model") / "2dfft_data_selected"
         data_path = data_path / sim_path
 
     # -- Specify output plot
@@ -366,15 +367,19 @@ if __name__ == "__main__":
 
     postprocessing_2dfft(
         # '030_1_1_1_000',
-        '010_1_1_1_000',
+        # '40._1._4._1._0',
+        # '170._1._1._1._0',
+        '600._1._1._1._0',
+        # '200._1._2._1._70',
+        #'010_1_1_1_000',
         # '200_1_3_1_100',
         # '200_1_1_1_000',
         # '300_1_2_1_000',
         # '300_1_3_1_200',
         plot=True,
         show=True,
-        save=False,
-        add_analytical=True,
+        save=True,
+        add_analytical=False,
         add_scatter=False,
         add_fit=False,
         fitting_style='lin_local',
