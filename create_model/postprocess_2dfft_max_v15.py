@@ -272,9 +272,6 @@ def postprocessing_2dfft(
     try:
         cr_path = a_path / 'Cr_dispersion_curves' / f'Chrome_{thick}_mm_dispersion_curves'
         ka_cr, fa_cr, mn_cr = load_analytical_data(cr_path, f'Chrome_{thick}_mm')
-        # thick_new = 0.4
-        # cr_path = a_path / 'Cr_dispersion_curves' / f'Chrome_{thick_new}_mm_dispersion_curves'
-        # ka_cr, fa_cr, mn_cr = load_analytical_data(cr_path, f'Chrome_{thick_new}_mm')
     except FileNotFoundError:
         ka_cr, fa_cr, mn_cr = None, None, None
 
@@ -287,9 +284,6 @@ def postprocessing_2dfft(
     try:
         zy4cr_path = a_path / 'Zy4Cr_dispersion_curves' / f'{thick}_Chrome!'
         ka_zy4cr, fa_zy4cr, mn_zy4cr = load_analytical_data(zy4cr_path, f'Zy4_3_Cr_{thick}')
-        # thick_new = 0.4
-        # zy4cr_path = a_path / 'Zy4Cr_dispersion_curves' / f'{thick_new}_Chrome'
-        # ka_zy4cr, fa_zy4cr, mn_zy4cr = load_analytical_data(zy4cr_path, f'Zy4_3_Cr_{thick_new}')
     except FileNotFoundError:
         ka_zy4cr, fa_zy4cr, mn_zy4cr = None, None, None
 
