@@ -9,13 +9,13 @@ import numpy as np
 import matplotlib
 
 # # comment this in if you want to export to latex
-# matplotlib.use("pgf")
-# matplotlib.rcParams.update({
-#     "pgf.texsystem": "pdflatex",
-#     'font.family': 'serif',
-#     'text.usetex': True,
-#     'pgf.rcfonts': False,
-# })
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 
 import matplotlib.pyplot as plt
 ## do not use this code:
@@ -579,8 +579,8 @@ def plot_sim_and_analy_data(
         plt.axis([0, 8000, 0, 2.5E7])
 
     # if save_publication:
-    # # add this only to include some labeling in plot for some exports
-    #     plt.text(7500, 1.4E7, r' $A_{0,plate}$ \& $S_{0,plate}$' + '\n' + r'$+ B_{0,combined}$')
+    #     # add this only to include some labeling in plot for some exports
+    #     plt.text(6700, 1.4E7, r' $A_{0,plate}$ \& $S_{0,plate}$') # + '\n' + r'$+ B_{0,combined}$')
     #     # plt.text(7500, 1.4E7, r' $A_{0,plate}$ \& $S_{0,plate}$ \\ $+ B_{0,combined}$')
     #     plt.text(2300, 0.6E7, r' $A_{0,coating}$')
     #     plt.text(3600, 2E7, r' $S_{0,coating}$')
@@ -642,9 +642,10 @@ def plot_sim_and_analy_data(
         unique_idx = [l.index(lbl) for lbl in unique_labels]
         unique_labels = [lbl[0:lbl.find('-')] for lbl in unique_labels]
 
-        # unique_idx = [0, 11, 31]  # hardcoding sucks, but for for 200_1_1_1_000
-        # unique_labels = ['Coating', 'Plate', 'Plate + Coating']  # hardcoding sucks, but for for 200_1_1_1_000
-
+        # # use this following hardcoding to get the right legend for the publication
+        # unique_idx = [0, 11]  #, 31]  # hardcoding sucks, but for for 200_1_1_1_000
+        # unique_labels = ['Coating', 'Plate']  # , 'Plate + Coating']  # hardcoding sucks, but for for 200_1_1_1_000
+        #
         # plt.legend([h[idx] for idx in unique_idx], unique_labels,
         #            title='Analytical Dispersion Curves')
 
@@ -665,21 +666,21 @@ def plot_sim_and_analy_data(
                 # # use this option for contourf plots, then import .pdf into Inkscape
                 # #  with the Poppler/Cairo option to keep the Latex CMU fonts and
                 # #  then save with 'Convert texts into paths'
-                pub_out_name = str(output_file.parent) + '/' + \
-                               str(int(sim_info['c_height'] * 1E6)) \
-                               + '_sim_disp.pdf'
-                               # + '_sim_and_analytical_disp.pdf'
-                plt.savefig(pub_out_name, backend='pgf', format='pdf', dpi=300)
-                print(f'Saved plot for publication with name: {pub_out_name}')
+                # pub_out_name = str(output_file.parent) + '/' + \
+                #                str(int(sim_info['c_height'] * 1E6)) \
+                #                + '_sim_disp.pdf'
+                #                # + '_sim_and_analytical_disp.pdf'
+                # plt.savefig(pub_out_name, backend='pgf', format='pdf', dpi=300)
+                # print(f'Saved plot for publication with name: {pub_out_name}')
 
                 # # use this to plot analytical and simulated curves, then import .pdf into Inkscape
                 # #  with the Poppler/Cairo option to keep the Latex CMU fonts and
                 # #  then save with 'Convert texts into paths'
-                # pub_out_name = str(output_file.parent) + '/' + \
-                #                str(int(sim_info['c_height'] * 1E6)) \
-                #                + '_sim_and_analytical_disp.pdf'
-                # plt.savefig(pub_out_name, backend='pgf', format='pdf', dpi=300)
-                # plt.savefig(pub_out_name[0:-3] + 'png', backend='pgf', format='png', dpi=300)
+                pub_out_name = str(output_file.parent) + '/' + \
+                               str(int(sim_info['c_height'] * 1E6)) \
+                               + '_sim_and_analytical_disp.pdf'
+                plt.savefig(pub_out_name, backend='pgf', format='pdf', dpi=300)
+                plt.savefig(pub_out_name[0:-3] + 'png', backend='pgf', format='png', dpi=300)
             else:
                 plt.savefig(output_file, bbox_inches='tight', pad_inches=0.1, dpi=300)
 
