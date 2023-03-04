@@ -155,8 +155,8 @@ for param_set in param_sets:
     fft_time = time.time() - extraction_time
     send_slack_message('CLUSTER: Postprocessing completed after %s min' % (fft_time/60))
 
-    delete_unwanted_files(white_list)
-    print('-----> unnecessary files deleted')
+    # delete_unwanted_files(white_list)
+    # print('-----> unnecessary files deleted')
 
     # store simulation information file and extracted 2dfft data in meaningful
     #    way (e.g. subfolders with thickness of plate as name) - done with way simulation is called

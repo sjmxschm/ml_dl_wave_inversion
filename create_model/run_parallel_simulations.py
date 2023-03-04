@@ -107,7 +107,8 @@ def run_parallel_sims():
         'parameter_sets.py',
         'postprocess_2dfft_max_v15.py',
         'run_automated_simulations_cluster.py',
-        'run_parallel_on_cluster.pbs',
+        #'run_parallel_on_cluster.pbs',
+        'run_parallel_on_cluster.sbatch',
         'run_simulation.py',
         'slack_url.py',
         'utils.py',
@@ -148,7 +149,7 @@ def run_parallel_sims():
                  + str(cg_top_right) + '_' + str(cg_gap_depth)
 
         parent_dir = Path.cwd()  # Path(__file__).parent.resolve()
-        print(f'parent_dir / folder')
+        print(f'{parent_dir / folder}')
         try:
             os.mkdir(parent_dir / folder)
         except FileExistsError:
@@ -160,9 +161,11 @@ def run_parallel_sims():
         print(f'sys.argv from run_parallel_simulations.py = {sys.argv}')
 
         # call the .pbs script with the respective param_set as argument
-        subprocess.run(['dos2unix', 'run_parallel_on_cluster.pbs'], cwd=Path(parent_dir / folder))
+        # subprocess.run(['dos2unix', 'run_parallel_on_cluster.sbatch'], cwd=Path(parent_dir / folder))
         r = subprocess.Popen(
-            ['qsub', '-v', f'P_SET="{param_set}"', 'run_parallel_on_cluster.pbs'],
+            #['qsub', '-v', f'P_SET="{param_set}"', 'run_parallel_on_cluster.pbs'],
+            [f'sbatch run_parallel_on_cluster.sbatch {param_set}'],
+            shell=True,
             cwd=Path(parent_dir / folder),
             stdout=PIPE,
             stderr=PIPE
