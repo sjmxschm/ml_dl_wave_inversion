@@ -78,18 +78,20 @@ def get_newest_file_name(data_path, job_name='max_analysis_job', extension='.odb
 # ______________________ Script starts here: ______________________ 
 
 
-def extract_displacement():
+def extract_displacement(d_path: None):
     """
     Extract the displacement information from Abaqus .odb file. Make sure that
      this file is run from the Abaqus Python interpreter, since extraction is
      not possible otherwise.
     """
+    if d_path is None:
+        d_path = getcwd()
 
     print('___________ extraction started ___________')
 
     # Specify files
     try:
-        odbName = get_newest_file_name(data_path=getcwd(), extension='.odb')
+        odbName = get_newest_file_name(data_path=d_path, extension='.odb')
     except Exception as ex:
         traceback.print_exc()
         print('Cannot load odb Names. Not enough storage accessible, remove unused files!')
