@@ -75,10 +75,11 @@ def get_newest_file_name(data_path, job_name='max_analysis_job', extension='.odb
                 newest_file_name = file
     return newest_file_name
 
-# ______________________ Script starts here: ______________________ 
+
+# ______________________ Script starts here: ______________________
 
 
-def extract_displacement(d_path: None):
+def extract_displacement(d_path=None):
     """
     Extract the displacement information from Abaqus .odb file. Make sure that
      this file is run from the Abaqus Python interpreter, since extraction is
@@ -103,12 +104,12 @@ def extract_displacement(d_path: None):
 
     dispFileName = odbName[0:-4] + '_disp.csv'
     # import pdb; pdb.set_trace()
-    dispComponent = 0 # 0-> write x-component | 1-> write y-component
+    dispComponent = 0  # 0-> write x-component | 1-> write y-component
 
     # Specify model data
     stepName = 'excitation_explicit_analysis'
     instanceName = 'PLATE_COMPLETE_MERGE-1'  # 'Plate_complete_MERGE-1'  # 'COATING_INSTANCE'
-    nodeSetName = 'SAMPLING_NODES'   # 'Sampling_Nodes'  # 'SAMPLING_NODES'
+    nodeSetName = 'SAMPLING_NODES'  # 'Sampling_Nodes'  # 'SAMPLING_NODES'
 
     # Open output file
     odb = openOdb(odbName, readOnly=False)
@@ -127,9 +128,10 @@ def extract_displacement(d_path: None):
             frameDisp = outputStep.frames[frame].fieldOutputs['U']
             samplingNodesDisp = frameDisp.getSubset(region=samplingNodes)
 
-            row = ['%10.10E'% (frameTime)] # % is inserting values from dict into string: format % values (printf-style String Formatting)
+            row = ['%10.10E' % (
+                frameTime)]  # % is inserting values from dict into string: format % values (printf-style String Formatting)
             for node in samplingNodesDisp.values:
-                row.append('%10.10E'% (node.data[dispComponent]))
+                row.append('%10.10E' % (node.data[dispComponent]))
             rows.append(row)
         writer.writerows(rows)
 
