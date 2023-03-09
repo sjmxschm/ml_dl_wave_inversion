@@ -17,14 +17,15 @@ def delete_qjobs(job_min: int, job_max: int):
 
     for job in jobs:
         r = subprocess.run(
-            ['qdel %s ' % job],
+            # ['qdel %s ' % job],
+            ['scancel %s ' % job],
             shell=True
         )
 
 
 if __name__ == '__main__':
     # specify job id on cluster
-    job_min = 5229285
-    job_max = 5229304
+    job_min = 918056
+    job_max = 918115
 
     delete_qjobs(job_min, job_max)

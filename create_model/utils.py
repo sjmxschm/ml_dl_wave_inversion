@@ -1052,7 +1052,7 @@ def cut_quadrants(fg, kg, abs_fft_data) -> tuple:
 #     return ka_cr, fa_cr, mn_cr, ka_zy4cr, fa_zy4cr, mn_zy4cr, ka_zy, fa_zy, mn_zy
 
 
-def load_input_data(data_path):
+def load_input_data(data_path, j_name='max_analysis_job'):
     """
     load simulation data for 2D-FFT into numpy array and simulation information
     into dictionary
@@ -1062,7 +1062,7 @@ def load_input_data(data_path):
     # print(get_newest_file_name(data_path, extension='.csv'))
     # print(get_newest_file_name(data_path, extension='.json'))
     try:
-        data_file, _ = get_newest_file_name(data_path, extension='.csv')
+        data_file, _ = get_newest_file_name(data_path, job_name=j_name, extension='.csv')
         inputData = np.genfromtxt(open(data_path / data_file), delimiter=',')
     except (NameError, TypeError):
         print('No .csv file with appropriate naming in directory!')

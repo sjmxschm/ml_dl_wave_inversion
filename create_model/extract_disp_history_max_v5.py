@@ -92,7 +92,7 @@ def extract_displacement(d_path=None):
 
     # Specify files
     try:
-        odbName = get_newest_file_name(data_path=d_path, extension='.odb')
+        odbName = get_newest_file_name(data_path=d_path, job_name='max_analysis_job_upgraded', extension='.odb')
     except Exception as ex:
         traceback.print_exc()
         print('Cannot load odb Names. Not enough storage accessible, remove unused files!')

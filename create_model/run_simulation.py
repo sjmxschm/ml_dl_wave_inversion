@@ -42,7 +42,7 @@ def parse_input_variables(input_list):
         'cg_top_left': 0.001,
         'cg_top_right': 0.001,
         'cg_bevel': 0.001,
-        'cg_gap_depth': 0.00005,
+        'cg_gap_depth': 0.00000, # 0.00005
         'ex_amp': 2e-06,
         'num_mesh': 1,
         't_max': 2E-8,
@@ -68,8 +68,8 @@ def parse_input_variables(input_list):
             #         sd[elem[0:eq_idx]] = None
             #     else:
             #         sd[elem[0:eq_idx]] = None  # int(elem[eq_idx+1:])
-            if elem[0:eq_idx] in sd:
-                sd[elem[0:eq_idx]] = float(elem[eq_idx+1:])
+            if elem[2:eq_idx] in sd:    # elem[0:eq_idx]
+                sd[elem[2:eq_idx]] = float(elem[eq_idx+1:])
     return sd
 
 
@@ -81,6 +81,9 @@ if __name__ == "__main__":
     # import pdb; pdb.set_trace()
 
     sd = parse_input_variables(sys.argv)
+
+    print('The input variables in run_simulation are:')
+    print(sd)
 
     run_abaqus_model(
         sd['coating_height'],

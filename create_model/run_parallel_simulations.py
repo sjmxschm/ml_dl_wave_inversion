@@ -128,25 +128,28 @@ def run_parallel_sims():
                                           factor=1E6, formatting='.1f')
         print(thick)
 
-        # youngs_mod = get_values_from_param_set(param_set, attribute='coating_youngs_mod=',
-        #                                        factor=1E-9, formatting='.d')
-
-        cg_top_left = get_values_from_param_set(param_set, attribute='cg_top_left=',
-                                                factor=1E3, formatting='.1f')
-
-        cg_top_right = get_values_from_param_set(param_set, attribute='cg_top_right=',
-                                                 factor=1E3, formatting='.1f')
-
-        cg_bevel = get_values_from_param_set(param_set, attribute='cg_bevel=',
-                                             factor=1E3, formatting='.1f')
-
-        cg_gap_depth = get_values_from_param_set(param_set, attribute='cg_gap_depth=',
-                                                 factor=1E6, formatting='3.1f')  # formatting was '.1f'
-        print(cg_gap_depth)
+        # # youngs_mod = get_values_from_param_set(param_set, attribute='coating_youngs_mod=',
+        # #                                        factor=1E-9, formatting='.d')
+        #
+        # cg_top_left = get_values_from_param_set(param_set, attribute='cg_top_left=',
+        #                                         factor=1E3, formatting='.1f')
+        #
+        # cg_top_right = get_values_from_param_set(param_set, attribute='cg_top_right=',
+        #                                          factor=1E3, formatting='.1f')
+        #
+        # cg_bevel = get_values_from_param_set(param_set, attribute='cg_bevel=',
+        #                                      factor=1E3, formatting='.1f')
+        #
+        # cg_gap_depth = get_values_from_param_set(param_set, attribute='cg_gap_depth=',
+        #                                          factor=1E6, formatting='3.1f')  # formatting was '.1f'
+        # print(cg_gap_depth)
+        #
+        # folder = str(thick) + '_' \
+        #          + str(cg_top_left) + '_' + str(cg_bevel) + '_' \
+        #          + str(cg_top_right) + '_' + str(cg_gap_depth)
 
         folder = str(thick) + '_' \
-                 + str(cg_top_left) + '_' + str(cg_bevel) + '_' \
-                 + str(cg_top_right) + '_' + str(cg_gap_depth)
+                 + "1._1._1._0."
 
         parent_dir = Path.cwd()  # Path(__file__).parent.resolve()
         print(f'{parent_dir / folder}')
@@ -158,12 +161,13 @@ def run_parallel_sims():
         for c_file in copy_files:
             copy2folder(c_file, parent_dir, folder)
 
-        print(f'sys.argv from run_parallel_simulations.py = {sys.argv}')
+        # print(f'sys.argv from run_parallel_simulations.py = {sys.argv}')
 
         # call the .pbs script with the respective param_set as argument
         # subprocess.run(['dos2unix', 'run_parallel_on_cluster.sbatch'], cwd=Path(parent_dir / folder))
         r = subprocess.Popen(
-            #['qsub', '-v', f'P_SET="{param_set}"', 'run_parallel_on_cluster.pbs'],
+            # ['qsub', '-v', f'P_SET="{param_set}"', 'run_parallel_on_cluster.pbs'],
+            # [f'sbatch run_parallel_on_cluster.sbatch {param_set}'],
             [f'sbatch run_parallel_on_cluster.sbatch {param_set}'],
             shell=True,
             cwd=Path(parent_dir / folder),
