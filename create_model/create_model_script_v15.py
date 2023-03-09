@@ -394,7 +394,8 @@ def run_abaqus_model(
     cR_chrome = c_eta * np.sqrt(c_mu / c_density)
 
     n_mesh = int(num_mesh)  # 2  #int(num_mesh) # was 1
-    c_elem_size = cR_chrome / (n_mesh * f_max)   # = 0.001455276846282673
+    c_elem_size = cR_chrome / (n_mesh * f_max)   # = 0.001455276846282673 - commented this out just for debugging
+    # c_elem_size = 0.005821    # for debugging and faster results
     # c_elem_size = round(cR_chrome / (n_mesh * f_max), 6)  # = 0.001455276846282673
     print('c_elem_size = ', c_elem_size)
     b_elem_size = c_elem_size  # set to same element size to reduce reflections at interface

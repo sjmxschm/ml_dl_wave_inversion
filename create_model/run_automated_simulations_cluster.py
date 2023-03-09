@@ -76,18 +76,21 @@ white_list = ['.py',
               # '.odb']
 
 print('______ extract parameters from command line ______')
-sd = parse_input_variables(sys.argv)
+sys_argv_copy = sys.argv
+sd = parse_input_variables(sys_argv_copy)
 print('sys.argv of run_automated_cluster.py is %s' % str(sd))
-param_sets = ''
-for elem in sd:
-    param_sets = param_sets + ' -- ' + str(elem) + '=' + str(sd[elem])
-param_sets = [param_sets]  # make it to a list
+# param_sets = ''
+# for elem in sd:
+#     param_sets = param_sets + ' -- ' + str(elem) + '=' + str(sd[elem])
+# param_sets = [param_sets]  # make it to a list
+param_sets = [sys_argv_copy[1][2::]]
 print('param_sets (type: %s): %s\nis passed into loop' % (type(param_sets), param_sets))
 
 
-sim_specs = str(round(sd['coating_height'] * 1E6)) + '_' \
-            + str(sd['cg_top_left'] * 1E3) + '_' + str(sd['cg_bevel'] * 1E3) + '_' \
-            + str(sd['cg_top_right'] * 1E3) + '_' + str(round(sd['cg_gap_depth'] * 1E6))
+# sim_specs = str(round(sd['coating_height'] * 1E6)) + '_' \
+#             + str(sd['cg_top_left'] * 1E3) + '_' + str(sd['cg_bevel'] * 1E3) + '_' \
+#             + str(sd['cg_top_right'] * 1E3) + '_' + str(round(sd['cg_gap_depth'] * 1E6))
+sim_specs = sys_argv_copy[1][2::]
 
 print('______ simulation pipeline was started ______')
 send_slack_message('-> Parameters: %s\nAbaqus simulation pipeline started' % sim_specs)
@@ -104,9 +107,11 @@ for param_set in param_sets:
         -- run_it -- num_mesh=0.1')
     '''
 
+    print(f"sys_argv_copy={sys_argv_copy},sys.argv[2:-1]={sys_argv_copy[1][2::]}")
     # r = Popen(
     r = subprocess.run(
-        ['abaqus cae noGUI=run_simulation.py%s ' % param_set],
+        # ['abaqus cae noGUI=run_simulation.py%s ' % param_set],
+        ['abaqus cae noGUI=run_simulation.py -- %s ' % sys_argv_copy[1][2::]],
         # stdout=PIPE,
         # stderr=PIPE,
         shell=True

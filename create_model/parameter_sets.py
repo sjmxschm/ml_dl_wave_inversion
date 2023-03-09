@@ -4273,116 +4273,33 @@ def load_param_sets():
     #     ' -- ',
     # ]
 
-    # param_sets = [
-    #     # batch 1.1: 12 simulations in steps of 50 microns from 50 to 600
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000050'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000100'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000150'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000200'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000250'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000300'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000350'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000400'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000450'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000500'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000550'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
-    #     ' -- plate_width=0.08'
-    #     ' -- coating_height=0.000600'
-    #     ' -- base_plate_height=0.001'
-    #     ' -- t_sampling=0.00000002'
-    #     ' -- cg_top_left=0.001'
-    #     ' -- cg_top_right=0.001'
-    #     ' -- cg_bevel=0.001'
-    #     ' -- cg_gap_depth=0.000000'
-    #     ' -- ',
+    param_sets = [
+        # batch 1.1: 12 simulations in steps of 50 microns from 50 to 600
+        ' -- coating_height=0.000050'
+        ' -- ',
+        ' -- coating_height=0.000100'
+        ' -- ',
+        ' -- coating_height=0.000150'
+        ' -- ',
+        ' -- coating_height=0.000200'
+        ' -- ',
+        ' -- coating_height=0.000250'
+        ' -- ',
+        ' -- coating_height=0.000300'
+        ' -- ',
+        ' -- coating_height=0.000350'
+        ' -- ',
+        ' -- coating_height=0.000400'
+        ' -- ',
+        ' -- coating_height=0.000450'
+        ' -- ',
+        ' -- coating_height=0.000500'
+        ' -- ',
+        ' -- coating_height=0.000550'
+        ' -- ',
+        ' -- coating_height=0.000600'
+        ' -- ',
+    ]
     #     # batch 1.2: 19 simualations starting at 10 microns in steps of 5 to 100 microns
     #     ' -- plate_width=0.08'
     #     ' -- coating_height=0.000010'
@@ -4739,119 +4656,119 @@ def load_param_sets():
     #     # 51 simulations in total until here
     # ]
 
-    param_sets = [
-        # batch 2.1: 18 simulations in steps of 5 microns from 205 to 295
-        ' --coating_height=0.000205'
-        ' -- ',
-        ' --coating_height=0.000210'
-        ' -- ',
-        ' --coating_height=0.000215'
-        ' -- ',
-        ' --coating_height=0.000220'
-        ' -- ',
-        ' --coating_height=0.000225'
-        ' -- ',
-        ' --coating_height=0.000230'
-        ' -- ',
-        ' --coating_height=0.000235'
-        ' -- ',
-        ' --coating_height=0.000240'
-        ' -- ',
-        ' --coating_height=0.000245'
-        ' -- ',
-        ' --coating_height=0.000255'
-        ' -- ',
-        ' --coating_height=0.000260'
-        ' -- ',
-        ' --coating_height=0.000265'
-        ' -- ',
-        ' --coating_height=0.000270'
-        ' -- ',
-        ' --coating_height=0.000275'
-        ' -- ',
-        ' --coating_height=0.000280'
-        ' -- ',
-        ' --coating_height=0.000285'
-        ' -- ',
-        ' --coating_height=0.000290'
-        ' -- ',
-        ' --coating_height=0.000295'
-        ' -- ',
-        # batch 2.2: 18 simulations in steps of 5 microns from 305 to 395
-        ' --coating_height=0.000305'
-        ' -- ',
-        ' --coating_height=0.000310'
-        ' -- ',
-        ' --coating_height=0.000315'
-        ' -- ',
-        ' --coating_height=0.000320'
-        ' -- ',
-        ' --coating_height=0.000325'
-        ' -- ',
-        ' --coating_height=0.000330'
-        ' -- ',
-        ' --coating_height=0.000335'
-        ' -- ',
-        ' --coating_height=0.000340'
-        ' -- ',
-        ' --coating_height=0.000345'
-        ' -- ',
-        ' --coating_height=0.000355'
-        ' -- ',
-        ' --coating_height=0.000360'
-        ' -- ',
-        ' --coating_height=0.000365'
-        ' -- ',
-        ' --coating_height=0.000370'
-        ' -- ',
-        ' --coating_height=0.000375'
-        ' -- ',
-        ' --coating_height=0.000380'
-        ' -- ',
-        ' --coating_height=0.000385'
-        ' -- ',
-        ' --coating_height=0.000390'
-        ' -- ',
-        ' --coating_height=0.000395'
-        ' -- ',
-        # batch 2.3: 18 simulations in steps of 5 microns from 405 to 495
-        ' --coating_height=0.000405'
-        ' -- ',
-        ' --coating_height=0.000410'
-        ' -- ',
-        ' --coating_height=0.000415'
-        ' -- ',
-        ' --coating_height=0.000420'
-        ' -- ',
-        ' --coating_height=0.000425'
-        ' -- ',
-        ' --coating_height=0.000430'
-        ' -- ',
-        ' --coating_height=0.000435'
-        ' -- ',
-        ' --coating_height=0.000440'
-        ' -- ',
-        ' --coating_height=0.000445'
-        ' -- ',
-        ' --coating_height=0.000455'
-        ' -- ',
-        ' --coating_height=0.000460'
-        ' -- ',
-        ' --coating_height=0.000465'
-        ' -- ',
-        ' --coating_height=0.000470'
-        ' -- ',
-        ' --coating_height=0.000475'
-        ' -- ',
-        ' --coating_height=0.000480'
-        ' -- ',
-        ' --coating_height=0.000485'
-        ' -- ',
-        ' --coating_height=0.000490'
-        ' -- ',
-        ' --coating_height=0.000495'
-        ' -- ',
-    ]
+    # param_sets = [
+    #     # batch 2.1: 18 simulations in steps of 5 microns from 205 to 295
+    #     ' --coating_height=0.000205'
+    #     ' -- ',
+        # ' --coating_height=0.000210'
+        # ' -- ',
+        # ' --coating_height=0.000215'
+        # ' -- ',
+        # ' --coating_height=0.000220'
+        # ' -- ',
+        # ' --coating_height=0.000225'
+        # ' -- ',
+        # ' --coating_height=0.000230'
+        # ' -- ',
+        # ' --coating_height=0.000235'
+        # ' -- ',
+        # ' --coating_height=0.000240'
+        # ' -- ',
+        # ' --coating_height=0.000245'
+        # ' -- ',
+        # ' --coating_height=0.000255'
+        # ' -- ',
+        # ' --coating_height=0.000260'
+        # ' -- ',
+        # ' --coating_height=0.000265'
+        # ' -- ',
+        # ' --coating_height=0.000270'
+        # ' -- ',
+        # ' --coating_height=0.000275'
+        # ' -- ',
+        # ' --coating_height=0.000280'
+        # ' -- ',
+        # ' --coating_height=0.000285'
+        # ' -- ',
+        # ' --coating_height=0.000290'
+        # ' -- ',
+        # ' --coating_height=0.000295'
+        # ' -- ',
+        # # batch 2.2: 18 simulations in steps of 5 microns from 305 to 395
+        # ' --coating_height=0.000305'
+        # ' -- ',
+        # ' --coating_height=0.000310'
+        # ' -- ',
+        # ' --coating_height=0.000315'
+        # ' -- ',
+        # ' --coating_height=0.000320'
+        # ' -- ',
+        # ' --coating_height=0.000325'
+        # ' -- ',
+        # ' --coating_height=0.000330'
+        # ' -- ',
+        # ' --coating_height=0.000335'
+        # ' -- ',
+        # ' --coating_height=0.000340'
+        # ' -- ',
+        # ' --coating_height=0.000345'
+        # ' -- ',
+        # ' --coating_height=0.000355'
+        # ' -- ',
+        # ' --coating_height=0.000360'
+        # ' -- ',
+        # ' --coating_height=0.000365'
+        # ' -- ',
+        # ' --coating_height=0.000370'
+        # ' -- ',
+        # ' --coating_height=0.000375'
+        # ' -- ',
+        # ' --coating_height=0.000380'
+        # ' -- ',
+        # ' --coating_height=0.000385'
+        # ' -- ',
+        # ' --coating_height=0.000390'
+        # ' -- ',
+        # ' --coating_height=0.000395'
+        # ' -- ',
+        # # batch 2.3: 18 simulations in steps of 5 microns from 405 to 495
+        # ' --coating_height=0.000405'
+        # ' -- ',
+        # ' --coating_height=0.000410'
+        # ' -- ',
+        # ' --coating_height=0.000415'
+        # ' -- ',
+        # ' --coating_height=0.000420'
+        # ' -- ',
+        # ' --coating_height=0.000425'
+        # ' -- ',
+        # ' --coating_height=0.000430'
+        # ' -- ',
+        # ' --coating_height=0.000435'
+        # ' -- ',
+        # ' --coating_height=0.000440'
+        # ' -- ',
+        # ' --coating_height=0.000445'
+        # ' -- ',
+        # ' --coating_height=0.000455'
+        # ' -- ',
+        # ' --coating_height=0.000460'
+        # ' -- ',
+        # ' --coating_height=0.000465'
+        # ' -- ',
+        # ' --coating_height=0.000470'
+        # ' -- ',
+        # ' --coating_height=0.000475'
+        # ' -- ',
+        # ' --coating_height=0.000480'
+        # ' -- ',
+        # ' --coating_height=0.000485'
+        # ' -- ',
+        # ' --coating_height=0.000490'
+        # ' -- ',
+        # ' --coating_height=0.000495'
+        # ' -- ',
+    # ]
 
     return param_sets
 

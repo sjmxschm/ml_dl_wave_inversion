@@ -29,7 +29,7 @@ def parse_input_variables(input_list):
     sd = {
         'coating_height': 600E-6,
         'plate_width': 0.08,
-        'base_plate_height': 0.003,
+        'base_plate_height': 0.001,
         'coating_density': 7190.0,
         'coating_youngs_mod': 279E9,
         'coating_pois_rat': 0.21,
@@ -42,12 +42,12 @@ def parse_input_variables(input_list):
         'cg_top_left': 0.001,
         'cg_top_right': 0.001,
         'cg_bevel': 0.001,
-        'cg_gap_depth': 0.00000, # 0.00005
+        'cg_gap_depth': 0.00000,  # 0.00005
         'ex_amp': 2e-06,
-        'num_mesh': 1,
+        'num_mesh': 1,  # to be used: 1,
         't_max': 2E-8,
-        't_sampling': 2E-8,  # 5E-8,  # 2E-7,
-        't_period': 9.2E-5,
+        't_sampling': 1E-5,  # to be used: 2E-8,  # 5E-8,  # 2E-7,
+        't_period': 2E-5,  # to be used 9.2E-5,
         'run_it': True,
         'save_inp': False,
         'cores': None
@@ -68,8 +68,8 @@ def parse_input_variables(input_list):
             #         sd[elem[0:eq_idx]] = None
             #     else:
             #         sd[elem[0:eq_idx]] = None  # int(elem[eq_idx+1:])
-            if elem[2:eq_idx] in sd:    # elem[0:eq_idx]
-                sd[elem[2:eq_idx]] = float(elem[eq_idx+1:])
+            if elem[0:eq_idx] in sd:    # elem[0:eq_idx]
+                sd[elem[0:eq_idx]] = float(elem[eq_idx+1:])
     return sd
 
 
