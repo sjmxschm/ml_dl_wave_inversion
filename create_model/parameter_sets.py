@@ -4275,30 +4275,18 @@ def load_param_sets():
 
     param_sets = [
         # batch 1.1: 12 simulations in steps of 50 microns from 50 to 600
-        ' -- coating_height=0.000050'
-        ' -- ',
-        ' -- coating_height=0.000100'
-        ' -- ',
-        ' -- coating_height=0.000150'
-        ' -- ',
-        ' -- coating_height=0.000200'
-        ' -- ',
-        ' -- coating_height=0.000250'
-        ' -- ',
-        ' -- coating_height=0.000300'
-        ' -- ',
-        ' -- coating_height=0.000350'
-        ' -- ',
-        ' -- coating_height=0.000400'
-        ' -- ',
-        ' -- coating_height=0.000450'
-        ' -- ',
-        ' -- coating_height=0.000500'
-        ' -- ',
-        ' -- coating_height=0.000550'
-        ' -- ',
-        ' -- coating_height=0.000600'
-        ' -- ',
+        '--coating_height=0.000050',
+        '--coating_height=0.000100',
+        '--coating_height=0.000150',
+        '--coating_height=0.000200',
+        '--coating_height=0.000250',
+        '--coating_height=0.000300',
+        '--coating_height=0.000350',
+        '--coating_height=0.000400',
+        '--coating_height=0.000450',
+        '--coating_height=0.000500',
+        '--coating_height=0.000550',
+        '--coating_height=0.000600'
     ]
     #     # batch 1.2: 19 simualations starting at 10 microns in steps of 5 to 100 microns
     #     ' -- plate_width=0.08'

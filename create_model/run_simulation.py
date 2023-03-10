@@ -44,10 +44,10 @@ def parse_input_variables(input_list):
         'cg_bevel': 0.001,
         'cg_gap_depth': 0.00000,  # 0.00005
         'ex_amp': 2e-06,
-        'num_mesh': 1,  # to be used: 1,
+        'num_mesh': 1,  # 0.001,  # to be used: 1,
         't_max': 2E-8,
-        't_sampling': 1E-5,  # to be used: 2E-8,  # 5E-8,  # 2E-7,
-        't_period': 2E-5,  # to be used 9.2E-5,
+        't_sampling': 2E-8,  # 1E-5,  # to be used: 2E-8,  # 5E-8,  # 2E-7,
+        't_period': 9.2E-5,  # 2E-5,  # to be used 9.2E-5,
         'run_it': True,
         'save_inp': False,
         'cores': None
