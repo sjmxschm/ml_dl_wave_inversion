@@ -150,7 +150,7 @@ def apply_2dfft(input_data, sim_info):
     fft_data = np.fft.fftshift(np.fft.fft2(disp_x_time))  # *dx*dt
     print("--- np 2dfft time: %s seconds ---" % (time.time() - start_time))
 
-    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistant with older data
+    fg, kg = np.meshgrid(k, f)  # f and k are mixed up here - leave mistake to be consistent with older data
 
     abs_fft_data = np.absolute(fft_data)  # for amplitude spectrum
     # abs_fft_data = 20 * np.log10(np.absolute(fft_data))       # for amplitude spectrum in dB
