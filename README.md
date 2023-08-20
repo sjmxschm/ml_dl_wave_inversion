@@ -159,9 +159,16 @@ data: [mschmitz7@gatech.edu](mailto:mschmitz7@gatech.edu)
 If you find this useful, please cite our paper.
  ```
 @article{ml_wave_inversion,
-  title={Machine and Deep Learning for Coating Thickness Prediction Using Lamb Wave},
-  author= {Maximilian Schmitz and Jin-Yeon Kim and Laurence J. Jacobs},
-  journal={Available at SSRN: https://ssrn.com/abstract=4124083},
+  title = {Machine and deep learning for coating thickness prediction using Lamb waves},
+  author = {Maximilian Schmitz and Jin-Yeon Kim and Laurence J. Jacobs},
+  journal = {Wave Motion},
+  volume = {120},
+  pages = {103137},
+  year = {2023},
+  issn = {0165-2125},
+  doi = {https://doi.org/10.1016/j.wavemoti.2023.103137},
+  url = {https://www.sciencedirect.com/science/article/pii/S0165212523000239},
+  keywords = {Machine learning, Deep learning, Inversion, Wave propagation, Lamb wave, Fourier transform},
   year={2022}
 }
 ```
