@@ -8,10 +8,10 @@
 
 ## Introduction
 
-This is the official repository of the publication (though it really is a pre-print yet)
+This is the official repository of the publication
 > Schmitz, Maximilian and Kim, Jin-Yeon and Jacobs, Laurence J., Machine and Deep Learning for Coating Thickness 
-> Prediction Using Lamb Waves. Available at SSRN: https://ssrn.com/abstract=4124083 or 
-> http://dx.doi.org/10.2139/ssrn.4124083
+> Prediction Using Lamb Waves. Available at ScienceDirect: [here](https://www.sciencedirect.com/science/article/abs/pii/S0165212523000239?via%3Dihub) or 
+> [http://dx.doi.org/10.2139/ssrn.4124083](https://doi.org/10.1016/j.wavemoti.2023.103137)
 
 With this repository, you can
 - convert phase speed - frequency representations into the frequency - wave number domain
